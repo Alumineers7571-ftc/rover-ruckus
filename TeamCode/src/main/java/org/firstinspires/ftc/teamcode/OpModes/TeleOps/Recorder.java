@@ -42,6 +42,10 @@ public class Recorder extends OpMode{
             file = FinalValues.cbTMtoCrater;
             robot.inputManager.setupRecording(file);
             isStarted = true;
+        } else if (gamepad1.b) {
+            file = FinalValues.cbSampleToTM;
+            robot.inputManager.setupRecording(file);
+            isStarted = true;
         }
 
         if (isStarted){

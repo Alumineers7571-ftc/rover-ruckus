@@ -10,7 +10,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.Control.ENUMS;
+import org.firstinspires.ftc.teamcode.Control.FinalValues;
 import org.firstinspires.ftc.teamcode.Hardware.DriveTrain;
+import org.firstinspires.ftc.teamcode.Hardware.Gyro;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 
 @Autonomous (name = "BlueCrater", group = "MAIN")
@@ -61,6 +63,9 @@ public class BlueCrater extends LinearOpMode {
             robot.gyro.angles = robot.gyro.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             robot.gyro.gyroangle = Double.parseDouble(robot.gyro.formatAngle(robot.gyro.angles.angleUnit, robot.gyro.angles.firstAngle));
 
+            telemetry.addData("GyroAngle: ", robot.gyro.gyroangle);
+            telemetry.addData("Angle: ", robot.gyro.angles);
+
             currentAngle = robot.gyro.gyroangle;
 
             switch (robostate) {
@@ -79,7 +84,21 @@ public class BlueCrater extends LinearOpMode {
 
                     goldLocation = detector.getLastOrder();
 
-                    robostate = ENUMS.CraterAutoStates.GETTHATGOLD;
+                    robostate = ENUMS.CraterAutoStates.TESTGYRO;
+                    break;
+                }
+                case TESTGYRO: {
+
+                    robot.drive.turnAbsoulte(90, currentAngle);
+                    if (currentAngle >= 86 && currentAngle <= 94){
+                        robot.drive.setThrottle(0);
+                        currentAngleOffset = currentAngle;
+
+                        robostate = ENUMS.CraterAutoStates.FINDWALL;
+
+                        break;
+                    }
+
                 }
                 case GETTHATGOLD: {
 
@@ -100,19 +119,25 @@ public class BlueCrater extends LinearOpMode {
                     }
 
                     robot.drive.setThrottle(0.2);
-                    robot.mineralSystem.runIntake(1);
+                    //mineralSystem.runIntake(1);
                     sleep(1000);
                     robot.drive.setThrottle(0);
                     sleep(1000);
-                    robot.mineralSystem.runIntake(0);
+                    //mineralSystem.runIntake(0);
 
                     detector.disable();
+                    break;
                 }
                 case FINDWALL: {
 
+                    robot.inputManager.setupPlayback(FinalValues.cbSampleToTM);
+                    robot.inputManager.replayInputs();
 
+                    break;
 
                 }
+
+
 
             }
 

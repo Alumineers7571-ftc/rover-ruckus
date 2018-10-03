@@ -211,7 +211,7 @@ public class DriveTrain extends BaseHardware {
 
     public void turnAbsoulte(double target, double heading){
 
-        setMotorModes(DcMotor.RunMode.RUN_USING_ENCODER);
+        //setMotorModes(DcMotor.RunMode.RUN_USING_ENCODER);
 
         double Error   = heading - target;
         double Kp = 0.015;

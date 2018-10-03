@@ -7,7 +7,7 @@ public class ENUMS {
     }
 
     public enum CraterAutoStates{
-        START, FINDGOLD, GETTHATGOLD, FINDWALL, DROPTM, FINDCRATER, PARKANDEND
+        START, FINDGOLD, GETTHATGOLD, FINDWALL, DROPTM, FINDCRATER, PARKANDEND, TESTGYRO
     }
 
     public enum AutoTypes{
