@@ -60,13 +60,11 @@ public class BlueCrater extends LinearOpMode {
 
         while(opModeIsActive()) {
 
-            robot.gyro.angles = robot.gyro.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            robot.gyro.gyroangle = Double.parseDouble(robot.gyro.formatAngle(robot.gyro.angles.angleUnit, robot.gyro.angles.firstAngle));
 
             telemetry.addData("GyroAngle: ", robot.gyro.gyroangle);
             telemetry.addData("Angle: ", robot.gyro.angles);
 
-            currentAngle = robot.gyro.gyroangle;
+            currentAngle = robot.gyro.getGyroangle();
 
             switch (robostate) {
 

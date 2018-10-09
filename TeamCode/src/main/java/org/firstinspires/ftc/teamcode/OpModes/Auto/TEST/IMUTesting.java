@@ -10,46 +10,40 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+import org.firstinspires.ftc.teamcode.Hardware.Robot;
+
+import static org.firstinspires.ftc.teamcode.Hardware.DriveTrain.DriveTypes.TANK;
 
 @TeleOp(name = "Sample Op GYR324O", group = "Test")
 public class IMUTesting extends LinearOpMode {
 
-    // The IMU sensor object
-    BNO055IMU imu;
+   Robot rb = new Robot();
 
-    // State used for updating telemetry
-    Orientation angles;
+   final int T1_ANGLE = 20;
+
+   final int ANGLE_OFFSET = 3;
+
+
+   double currentAngle;
+
+   boolean notDone = true;
 
     @Override public void runOpMode() {
 
-        // Set up the parameters with which we will use our IMU. Note that integration
-        // algorithm here just reports accelerations to the logcat log; it doesn't actually
-        // provide positional information.
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+        rb.init(hardwareMap, telemetry, TANK);
 
-        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
-        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
-        // and named "imu".
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
-
-        // Wait until we're told to go
         waitForStart();
 
-        // Start the logging of measured acceleration
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+        while (opModeIsActive() && notDone) {
 
-        // Loop and update the dashboard
-        while (opModeIsActive()) {
-            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            telemetry.addData("roll: ", angles.firstAngle);
-            telemetry.update();
+            currentAngle = rb.gyro.getGyroangle();
+
+            rb.drive.turnAbsoulte(T1_ANGLE, currentAngle);
+            currentAngle = (int)currentAngle;
+            if (currentAngle >= T1_ANGLE - ANGLE_OFFSET && currentAngle <= T1_ANGLE + ANGLE_OFFSET) {
+                rb.drive.setThrottle(0);
+                notDone = false;
+            }
         }
     }
 }

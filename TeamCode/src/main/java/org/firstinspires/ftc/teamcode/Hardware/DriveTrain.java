@@ -213,7 +213,7 @@ public class DriveTrain extends BaseHardware {
 
         //setMotorModes(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        double Error   = heading - target;
+        double Error = heading - target;
         double Kp = 0.015;
         double leftPower;
         double rightPower;
@@ -224,9 +224,9 @@ public class DriveTrain extends BaseHardware {
             Range.clip(leftPower,-1,1);
             Range.clip(rightPower,-1,1);
 
-            FL.setPower(-leftPower);
+            FL.setPower(leftPower);
             FR.setPower(rightPower);
-            BL.setPower(-leftPower);
+            BL.setPower(leftPower);
             BR.setPower(rightPower);
         }
         else {
