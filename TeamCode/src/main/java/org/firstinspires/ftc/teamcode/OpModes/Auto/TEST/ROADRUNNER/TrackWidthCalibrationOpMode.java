@@ -5,15 +5,15 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.OpModes.Auto.TEST.ROADRUNNER.SampleMecanumDrive;
 
 /*
  * This routine measures the effective track width of the drivetrain (i.e., the distance between a
  * pair of wheels on opposite sides of the robot). This is required for the robot turn properly
  * during open-loop control.
  */
-@Autonomous
+@Autonomous (name = "CalibOpModeRR")
 public abstract class TrackWidthCalibrationOpMode extends LinearOpMode {
+
     public static int TOTAL_REVOLUTIONS = 4;
     public static double POWER = 0.3;
 

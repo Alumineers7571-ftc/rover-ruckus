@@ -7,7 +7,7 @@ android {
     defaultConfig {
         minSdkVersion 19
         //noinspection ExpiringTargetSdkVersion
-        targetSdkVersion 19
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
 
@@ -28,5 +28,5 @@ repositories {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(path: ':openCVLibrary3')
-    implementation project(':FtcRobotController')
+    implementation (name: 'RobotCore-release', ext: 'aar')
 }

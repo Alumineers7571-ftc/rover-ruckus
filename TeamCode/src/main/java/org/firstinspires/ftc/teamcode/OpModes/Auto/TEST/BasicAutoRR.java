@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode.OpModes.Auto.TEST;
 
-import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.*;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryConfig;
-import com.acmerobotics.roadrunner.trajectory.TrajectoryLoader;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.OpModes.Auto.TEST.ROADRUNNER.AssetsTrajectoryLoader;
@@ -11,7 +11,9 @@ import org.firstinspires.ftc.teamcode.OpModes.Auto.TEST.ROADRUNNER.SampleMecanum
 
 import java.io.IOException;
 
+@Autonomous(name = "BasicAutoRR")
 public class BasicAutoRR extends LinearOpMode {
+
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -21,8 +23,10 @@ public class BasicAutoRR extends LinearOpMode {
 
         TrajectoryConfig config = null;
         try {
-            config = AssetsTrajectoryLoader.loadConfig("test10_26");
+            config = AssetsTrajectoryLoader.loadConfig("test10_27");
         } catch (IOException e) {
+            telemetry.addData("BAD", "VBAD");
+            telemetry.update();
             e.printStackTrace();
         }
 

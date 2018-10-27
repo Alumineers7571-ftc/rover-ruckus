@@ -1,6 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <int name="webcamOffSetY">0</int> // from center
-    <int name="webcamOffSetX">110</int> // from left
-    <int name="webcamOffSetZ">200</int> //up from ground
 </resources>

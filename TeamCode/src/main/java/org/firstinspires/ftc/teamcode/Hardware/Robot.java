@@ -28,7 +28,7 @@ public class Robot{
         mineralSystem.init(hardwareMap, telemetry);
         gyro.init(hardwareMap,telemetry);
         inputManager.init(hardwareMap, telemetry);
-        computerVision.init(hardwareMap);
+        //computerVision.init(hardwareMap);
 
 
     }

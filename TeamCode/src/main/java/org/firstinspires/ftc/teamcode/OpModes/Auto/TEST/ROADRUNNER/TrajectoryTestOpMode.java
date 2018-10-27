@@ -6,7 +6,6 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.OpModes.Auto.TEST.ROADRUNNER.SampleMecanumDrive;
 
 /*
  * This is a simple routine to test trajectory following capabilities. It consists of two 180deg
@@ -16,11 +15,10 @@ import org.firstinspires.ftc.teamcode.OpModes.Auto.TEST.ROADRUNNER.SampleMecanum
  * minimize the need for feedback. Once the feedforward is working, begin adding feedback control
  * (tune velocity first).
  */
-@Autonomous
+@Autonomous(name = "TrajectoryTest")
 public class TrajectoryTestOpMode extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         // change these constraints to something reasonable for your drive
@@ -39,6 +37,8 @@ public class TrajectoryTestOpMode extends LinearOpMode {
         drive.followTrajectory(trajectory);
         while (opModeIsActive() && drive.isFollowingTrajectory()) {
             Pose2d currentPose = drive.getPoseEstimate();
+
+            //drive.setMotorPowers(0.3,0.3,0.3,0.3);
 
             drive.update();
         }
