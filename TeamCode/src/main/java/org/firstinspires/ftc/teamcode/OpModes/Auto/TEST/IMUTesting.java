@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Robot;
 
 import static org.firstinspires.ftc.teamcode.Hardware.DriveTrain.DriveTypes.TANK;
 
-@TeleOp(name = "Sample Op GYR324O", group = "Test")
+@TeleOp(name = "good gyro 20 - offset 3", group = "Test")
 public class IMUTesting extends LinearOpMode {
 
    Robot rb = new Robot();
@@ -23,10 +23,9 @@ public class IMUTesting extends LinearOpMode {
 
    final int ANGLE_OFFSET = 3;
 
-
    double currentAngle;
 
-   boolean notDone = true;
+   boolean done = false;
 
     @Override public void runOpMode() {
 
@@ -34,7 +33,7 @@ public class IMUTesting extends LinearOpMode {
 
         waitForStart();
 
-        while (opModeIsActive() && notDone) {
+        while (opModeIsActive() && !done) {
 
             currentAngle = rb.gyro.getGyroangle();
 
@@ -42,7 +41,7 @@ public class IMUTesting extends LinearOpMode {
             currentAngle = (int)currentAngle;
             if (currentAngle >= T1_ANGLE - ANGLE_OFFSET && currentAngle <= T1_ANGLE + ANGLE_OFFSET) {
                 rb.drive.setThrottle(0);
-                notDone = false;
+                done = false;
             }
         }
     }

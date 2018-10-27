@@ -79,6 +79,9 @@ public class DriveTrain extends BaseHardware {
 
     public void strafe(double power){
 
+        //power > 0 = right
+        //power < 0 = left
+
         FL.setPower(-power);
         FR.setPower(power);
         BL.setPower(power);
