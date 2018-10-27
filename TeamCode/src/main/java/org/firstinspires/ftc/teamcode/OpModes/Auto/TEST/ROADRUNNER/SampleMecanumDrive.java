@@ -36,8 +36,8 @@ public class SampleMecanumDrive extends MecanumDrive {
             MotorConfigurationType.getMotorType(NeveRest40Gearmotor.class);
     private static final double TICKS_PER_REV = MOTOR_CONFIG.getTicksPerRev();
 
-    public static double WHEEL_RADIUS = 2; // in
-    public static double GEAR_RATIO = 1; // output/input
+    public static double WHEEL_RADIUS = 4; // in
+    public static double GEAR_RATIO = 2; // output/input
     public static double TRACK_WIDTH = 1; // in
 
     public static DriveConstraints BASE_CONSTRAINTS = new DriveConstraints(20.0, 30.0, Math.PI / 2, Math.PI / 2);
@@ -84,8 +84,8 @@ public class SampleMecanumDrive extends MecanumDrive {
         }
 
         // TODO: if the robot moves backward in the tuning routine, change these to left
-        rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     private static double encoderTicksToInches(int ticks) {
