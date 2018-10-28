@@ -5,7 +5,7 @@ import android.util.Log;
 import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.DogeCVDetector;
 import com.disnodeteam.dogecv.filters.DogeCVColorFilter;
-import com.disnodeteam.dogecv.filters.HSVRangeFilter;
+import com.disnodeteam.dogecv.filters.HSVColorFilter;
 import com.disnodeteam.dogecv.filters.LeviColorFilter;
 import com.disnodeteam.dogecv.scoring.MaxAreaScorer;
 import com.disnodeteam.dogecv.scoring.PerfectAreaScorer;
@@ -48,7 +48,7 @@ public class SamplingOrderDetector extends DogeCVDetector {
 
     //Create the filters used
     public DogeCVColorFilter yellowFilter = new LeviColorFilter(LeviColorFilter.ColorPreset.YELLOW,100);
-    public DogeCVColorFilter whiteFilter  = new HSVRangeFilter(new Scalar(0,0,200), new Scalar(50,40,255));
+    public DogeCVColorFilter whiteFilter  = new HSVColorFilter(new Scalar(0,0,200), new Scalar(50,40,255));
 
 
     // Results for the detector
