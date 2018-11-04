@@ -11,6 +11,7 @@ public class Robot{
     public MineralSystem mineralSystem = new MineralSystem();
     public Gyro gyro = new Gyro();
     public InputManager inputManager = new InputManager();
+    public ComputerVision computerVision = new ComputerVision();
 
 
     public Robot() {
@@ -27,6 +28,7 @@ public class Robot{
         mineralSystem.init(hardwareMap, telemetry);
         gyro.init(hardwareMap,telemetry);
         inputManager.init(hardwareMap, telemetry);
+        //computerVision.init(hardwareMap);
 
 
     }

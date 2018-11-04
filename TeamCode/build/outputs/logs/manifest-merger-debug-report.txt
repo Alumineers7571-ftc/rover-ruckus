@@ -194,6 +194,7 @@ MERGED from [:Blocks-release:] /home/nick/.gradle/caches/transforms-1/files-1.1/
 		ADDED from [:RobotCore-release:] /home/nick/.gradle/caches/transforms-1/files-1.1/RobotCore-release.aar/1975d8cdef967836b2cd0b28d3b00e86/AndroidManifest.xml:28:9-65
 uses-permission#android.permission.READ_EXTERNAL_STORAGE
 ADDED from [:RobotCore-release:] /home/nick/.gradle/caches/transforms-1/files-1.1/RobotCore-release.aar/1975d8cdef967836b2cd0b28d3b00e86/AndroidManifest.xml:30:5-32:35
+IMPLIED from /home/nick/StudioProjects/rover-ruckus/TeamCode/src/main/AndroidManifest.xml:8:1-12:12 reason: com.qualcomm.robotcore requested WRITE_EXTERNAL_STORAGE
 MERGED from [:FtcCommon-release:] /home/nick/.gradle/caches/transforms-1/files-1.1/FtcCommon-release.aar/f379fc6fb1207181927594d675bcacb8/AndroidManifest.xml:16:5-18:35
 MERGED from [:FtcCommon-release:] /home/nick/.gradle/caches/transforms-1/files-1.1/FtcCommon-release.aar/f379fc6fb1207181927594d675bcacb8/AndroidManifest.xml:16:5-18:35
 MERGED from [:Blocks-release:] /home/nick/.gradle/caches/transforms-1/files-1.1/Blocks-release.aar/27db2636126c6292d5a837fd444acfee/AndroidManifest.xml:14:5-16:35

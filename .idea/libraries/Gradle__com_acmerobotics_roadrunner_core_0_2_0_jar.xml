@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.acmerobotics.roadrunner:core:0.2.0@jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.acmerobotics.roadrunner/core/0.2.0/8c1e673376e4fc22d1385b2320e7bef552504820/core-0.2.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.acmerobotics.roadrunner/core/0.2.0/4f1ef1371649979ed70ee43ab6e267780cc36bb5/core-0.2.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
