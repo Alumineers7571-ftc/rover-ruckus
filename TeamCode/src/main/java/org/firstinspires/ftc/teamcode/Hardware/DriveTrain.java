@@ -10,6 +10,15 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class DriveTrain extends BaseHardware {
 
+    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * 3.1415);
+    static final double     DRIVE_SPEED             = 0.4;
+    static final double     TURN_SPEED              = 0.3;
+
+
     Telemetry telemetry;
 
     public DriveTrain() {
@@ -143,6 +152,13 @@ public class DriveTrain extends BaseHardware {
 
     }
 
+    public void switchDirection(){
+        FL.setDirection(DcMotorSimple.Direction.FORWARD);
+        FR.setDirection(DcMotorSimple.Direction.FORWARD);
+        BL.setDirection(DcMotorSimple.Direction.FORWARD);
+        BR.setDirection(DcMotorSimple.Direction.FORWARD);
+    }
+
     public void checkMotors(double power){
 
         telemetry.addLine("IsBusy?: " + FL.isBusy());
@@ -240,4 +256,32 @@ public class DriveTrain extends BaseHardware {
         }
 
     }
+
+    public void moveEncoder(int inchesLeft, int inchesRight, double speed){
+
+        int lfPose = FL.getCurrentPosition() + (int)(inchesLeft * COUNTS_PER_INCH);
+        int lrPose = BL.getCurrentPosition() + (int)(inchesLeft * COUNTS_PER_INCH);
+        int rfPos = FR.getCurrentPosition() + (int)(inchesRight * COUNTS_PER_INCH);
+        int rrPos = BR.getCurrentPosition() + (int)(inchesRight * COUNTS_PER_INCH);
+
+        FL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        BL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        FR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        BR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        FL.setTargetPosition(lfPose);
+        BL.setTargetPosition(lrPose);
+        FR.setTargetPosition(rfPos);
+        BR.setTargetPosition(rrPos);
+
+        FL.setPower(speed);
+        BL.setPower(speed);
+        FR.setPower(speed);
+        BR.setPower(speed);
+    }
+
+    public boolean motorsBusy(){
+        return FL.isBusy() && BL.isBusy() && FR.isBusy() && BR.isBusy();
+    }
+
 }

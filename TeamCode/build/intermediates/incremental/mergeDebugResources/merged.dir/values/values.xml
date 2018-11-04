@@ -250,7 +250,7 @@
     <string name="appNameUnknown">Unknown Application</string>
     <string name="appThemeChangeRestartNotifyDS">App color scheme has changed. The driver station will restart.</string>
     <string name="appThemeChangeRestartNotifyRC">App color scheme has changed. The robot controller will restart.</string>
-    <string name="app_name">CVFTC</string>
+    <string name="app_name">FTC Robot Controller</string>
     <string name="attached">Attached</string>
     <string name="availableConfigListCaption">Available configurations:</string>
     <string name="availableConfigsInfoMessage">These are the configurations the Hardware Wizard was able to find. You can edit each configuration by clicking the edit button. The \'Activate\' button will set that configuration as the current one, which will be used to start the robot.</string>

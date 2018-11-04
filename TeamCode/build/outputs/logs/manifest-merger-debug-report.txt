@@ -4,8 +4,8 @@ ADDED from /home/nick/StudioProjects/rover-ruckus/TeamCode/src/main/AndroidManif
 INJECTED from /home/nick/StudioProjects/rover-ruckus/TeamCode/src/main/AndroidManifest.xml:8:1-12:12
 INJECTED from /home/nick/StudioProjects/rover-ruckus/TeamCode/src/main/AndroidManifest.xml:8:1-12:12
 INJECTED from /home/nick/StudioProjects/rover-ruckus/TeamCode/src/main/AndroidManifest.xml:8:1-12:12
-MERGED from [:DogeCV] /home/nick/StudioProjects/rover-ruckus/DogeCV/build/intermediates/manifests/full/debug/AndroidManifest.xml:2:1-17:12
 MERGED from [:FtcRobotController] /home/nick/StudioProjects/rover-ruckus/FtcRobotController/build/intermediates/manifests/full/debug/AndroidManifest.xml:2:1-47:12
+MERGED from [:DogeCV] /home/nick/StudioProjects/rover-ruckus/DogeCV/build/intermediates/manifests/full/debug/AndroidManifest.xml:2:1-17:12
 MERGED from [:RobotCore-release:] /home/nick/.gradle/caches/transforms-1/files-1.1/RobotCore-release.aar/1975d8cdef967836b2cd0b28d3b00e86/AndroidManifest.xml:2:1-98:12
 MERGED from [:Hardware-release:] /home/nick/.gradle/caches/transforms-1/files-1.1/Hardware-release.aar/25caf70f6706ea0098962fec44824d12/AndroidManifest.xml:2:1-11:12
 MERGED from [:FtcCommon-release:] /home/nick/.gradle/caches/transforms-1/files-1.1/FtcCommon-release.aar/f379fc6fb1207181927594d675bcacb8/AndroidManifest.xml:3:1-235:12
@@ -32,10 +32,10 @@ INJECTED from /home/nick/StudioProjects/rover-ruckus/TeamCode/src/main/AndroidMa
 		ADDED from /home/nick/StudioProjects/rover-ruckus/TeamCode/src/main/AndroidManifest.xml:10:5-63
 application
 ADDED from /home/nick/StudioProjects/rover-ruckus/TeamCode/src/main/AndroidManifest.xml:11:5-19
-MERGED from [:DogeCV] /home/nick/StudioProjects/rover-ruckus/DogeCV/build/intermediates/manifests/full/debug/AndroidManifest.xml:11:5-15:19
-MERGED from [:DogeCV] /home/nick/StudioProjects/rover-ruckus/DogeCV/build/intermediates/manifests/full/debug/AndroidManifest.xml:11:5-15:19
 MERGED from [:FtcRobotController] /home/nick/StudioProjects/rover-ruckus/FtcRobotController/build/intermediates/manifests/full/debug/AndroidManifest.xml:14:5-45:19
 MERGED from [:FtcRobotController] /home/nick/StudioProjects/rover-ruckus/FtcRobotController/build/intermediates/manifests/full/debug/AndroidManifest.xml:14:5-45:19
+MERGED from [:DogeCV] /home/nick/StudioProjects/rover-ruckus/DogeCV/build/intermediates/manifests/full/debug/AndroidManifest.xml:11:5-15:19
+MERGED from [:DogeCV] /home/nick/StudioProjects/rover-ruckus/DogeCV/build/intermediates/manifests/full/debug/AndroidManifest.xml:11:5-15:19
 MERGED from [:RobotCore-release:] /home/nick/.gradle/caches/transforms-1/files-1.1/RobotCore-release.aar/1975d8cdef967836b2cd0b28d3b00e86/AndroidManifest.xml:77:5-96:19
 MERGED from [:RobotCore-release:] /home/nick/.gradle/caches/transforms-1/files-1.1/RobotCore-release.aar/1975d8cdef967836b2cd0b28d3b00e86/AndroidManifest.xml:77:5-96:19
 MERGED from [:FtcCommon-release:] /home/nick/.gradle/caches/transforms-1/files-1.1/FtcCommon-release.aar/f379fc6fb1207181927594d675bcacb8/AndroidManifest.xml:23:5-233:19
@@ -47,13 +47,13 @@ MERGED from [:Blocks-release:] /home/nick/.gradle/caches/transforms-1/files-1.1/
 	android:supportsRtl
 		ADDED from [:DogeCV] /home/nick/StudioProjects/rover-ruckus/DogeCV/build/intermediates/manifests/full/debug/AndroidManifest.xml:14:9-35
 	android:label
-		ADDED from [:DogeCV] /home/nick/StudioProjects/rover-ruckus/DogeCV/build/intermediates/manifests/full/debug/AndroidManifest.xml:13:9-41
+		ADDED from [:FtcRobotController] /home/nick/StudioProjects/rover-ruckus/FtcRobotController/build/intermediates/manifests/full/debug/AndroidManifest.xml:17:9-41
 	android:largeHeap
 		ADDED from [:FtcRobotController] /home/nick/StudioProjects/rover-ruckus/FtcRobotController/build/intermediates/manifests/full/debug/AndroidManifest.xml:18:9-33
 	android:icon
 		ADDED from [:FtcRobotController] /home/nick/StudioProjects/rover-ruckus/FtcRobotController/build/intermediates/manifests/full/debug/AndroidManifest.xml:16:9-45
 	android:allowBackup
-		ADDED from [:DogeCV] /home/nick/StudioProjects/rover-ruckus/DogeCV/build/intermediates/manifests/full/debug/AndroidManifest.xml:12:9-35
+		ADDED from [:FtcRobotController] /home/nick/StudioProjects/rover-ruckus/FtcRobotController/build/intermediates/manifests/full/debug/AndroidManifest.xml:15:9-35
 	android:theme
 		ADDED from [:FtcRobotController] /home/nick/StudioProjects/rover-ruckus/FtcRobotController/build/intermediates/manifests/full/debug/AndroidManifest.xml:19:9-45
 	android:name
@@ -62,10 +62,10 @@ uses-sdk
 INJECTED from /home/nick/StudioProjects/rover-ruckus/TeamCode/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /home/nick/StudioProjects/rover-ruckus/TeamCode/src/main/AndroidManifest.xml
 INJECTED from /home/nick/StudioProjects/rover-ruckus/TeamCode/src/main/AndroidManifest.xml
-MERGED from [:DogeCV] /home/nick/StudioProjects/rover-ruckus/DogeCV/build/intermediates/manifests/full/debug/AndroidManifest.xml:7:5-9:41
-MERGED from [:DogeCV] /home/nick/StudioProjects/rover-ruckus/DogeCV/build/intermediates/manifests/full/debug/AndroidManifest.xml:7:5-9:41
 MERGED from [:FtcRobotController] /home/nick/StudioProjects/rover-ruckus/FtcRobotController/build/intermediates/manifests/full/debug/AndroidManifest.xml:8:5-10:41
 MERGED from [:FtcRobotController] /home/nick/StudioProjects/rover-ruckus/FtcRobotController/build/intermediates/manifests/full/debug/AndroidManifest.xml:8:5-10:41
+MERGED from [:DogeCV] /home/nick/StudioProjects/rover-ruckus/DogeCV/build/intermediates/manifests/full/debug/AndroidManifest.xml:7:5-9:41
+MERGED from [:DogeCV] /home/nick/StudioProjects/rover-ruckus/DogeCV/build/intermediates/manifests/full/debug/AndroidManifest.xml:7:5-9:41
 MERGED from [:RobotCore-release:] /home/nick/.gradle/caches/transforms-1/files-1.1/RobotCore-release.aar/1975d8cdef967836b2cd0b28d3b00e86/AndroidManifest.xml:7:5-9:41
 MERGED from [:RobotCore-release:] /home/nick/.gradle/caches/transforms-1/files-1.1/RobotCore-release.aar/1975d8cdef967836b2cd0b28d3b00e86/AndroidManifest.xml:7:5-9:41
 MERGED from [:Hardware-release:] /home/nick/.gradle/caches/transforms-1/files-1.1/Hardware-release.aar/25caf70f6706ea0098962fec44824d12/AndroidManifest.xml:7:5-9:41
