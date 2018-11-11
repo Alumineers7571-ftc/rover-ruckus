@@ -51,10 +51,6 @@ public class Depot extends LinearOpMode {
     List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
 
     GoldAlignDetector detector;
-
-    DriveTrain dt = new DriveTrain();
-
-    Gyro gyro = new Gyro();
     
     Robot rb = new Robot();
 
@@ -156,7 +152,7 @@ public class Depot extends LinearOpMode {
 
         rb.tm.setTMUp();
 
-        telemetry.addData("Ready: ", "true");
+        telemetry.addData("Ready", "true");
         telemetry.update();
 
         waitForStart();
@@ -173,7 +169,9 @@ public class Depot extends LinearOpMode {
 
                 case NAVTOSAMPLE1:{
 
-                    rb.drive.turnRelative(NAVTOGOLD_ONE_TURN_ANGLE, 3, Depot.this);
+                    while(rb.drive.turnRelative(NAVTOGOLD_ONE_TURN_ANGLE, 3, Depot.this)){
+
+                    }
 
                     robo = ENUMS.AutoStates.MOVETOTURN2;
 
@@ -196,14 +194,16 @@ public class Depot extends LinearOpMode {
 
                 case NAVTOSAMPLE2:{
 
-                    rb.drive.turnRelative(NAVTOGOLD_TWO_TURN_ANGLE, 3, Depot.this);
+                    while(rb.drive.turnRelative(NAVTOGOLD_TWO_TURN_ANGLE, 3, Depot.this)){
+
+                    }
 
                     robo = ENUMS.AutoStates.FINDGOLD;
 
                     break;
 
                 }
-//
+
                 case FINDGOLD: {
                     telemetry.addData("IsAligned", detector.getAligned()); // Is the bot aligned with the gold mineral
                     telemetry.addData("X Pos", detector.getXPosition()); // Gold X pos.
@@ -224,7 +224,9 @@ public class Depot extends LinearOpMode {
 
                     detector.disable();
 
-                    dt.turnRelative(SAMPLE_TURN_ANGLE, 4, Depot.this);
+                    while(rb.drive.turnRelative(SAMPLE_TURN_ANGLE, 4, Depot.this)){
+
+                    }
 
                     break;
                 }

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -8,7 +10,13 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Control.Math7571;
+
+import java.util.Locale;
 
 public class DriveTrain extends BaseHardware {
 
@@ -34,10 +42,19 @@ public class DriveTrain extends BaseHardware {
 
     DriveTypes driveType;
 
-    Gyro gyro = new Gyro();
     Math7571 mathEngine = new Math7571();
 
+    boolean trSetUp = false;
+    double wrappedAngle;
+    double currentAngle;
+
     public DcMotor FL, FR, BL, BR;
+
+    private BNO055IMU imu;
+
+    public Orientation angles;
+
+    private double gyroangle, startingValue;
 
     public void init(HardwareMap hardwareMap, Telemetry telemetry, DriveTypes type){
         this.initialize(hardwareMap, type, telemetry);
@@ -73,8 +90,23 @@ public class DriveTrain extends BaseHardware {
             }
         }
 
-        gyro.init(hardwareMap, telemetry);
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
+        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
+        // and named "imu".
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
 
+        startingValue = getGyroangle();
+
+        imu.initialize(parameters);
+
+        telemetry.addLine("DT & GYRO GOOD");
         telemetry.update();
 
 
@@ -262,30 +294,34 @@ public class DriveTrain extends BaseHardware {
 
     }
 
-    public void turnRelative(double angle, double tolerence, LinearOpMode opMode) {
+    public boolean turnRelative(double angle, double tolerence, LinearOpMode opMode) {
 
-        double wrappedAngle = mathEngine.wrapAround((int) (angle + gyro.getGyroangle()), -180, 180);
-        double currentAngle;
-        boolean done = false;
+            if (!trSetUp) {
 
-        while (opMode.opModeIsActive() && !done) {
+                wrappedAngle = mathEngine.wrapAround((int) (angle + getGyroangle()), -180, 180);
+                trSetUp = true;
 
-            currentAngle = gyro.getGyroangle();
+            }
+
+
+            currentAngle = getGyroangle();
 
             turnAbsoulte(wrappedAngle, currentAngle);
 
-            if ((currentAngle >= angle-tolerence) && (currentAngle <= angle+tolerence)) {
+            if ((currentAngle >= wrappedAngle-tolerence) && (currentAngle <= wrappedAngle+tolerence)) {
                 setThrottle(0);
-                done = true;
+                trSetUp = false;
+                return false;
             }
 
             opMode.telemetry.addLine("angle: " + currentAngle);
             opMode.telemetry.addLine("target: " + angle);
             opMode.telemetry.addLine("wrapped: " + wrappedAngle);
-            opMode.telemetry.addLine("done: " + done);
+            opMode.telemetry.addLine("setUp: " + trSetUp);
             opMode.telemetry.update();
 
-        }
+            return true;
+
     }
 
     public void moveEncoder(int inchesLeft, int inchesRight, double speed){
@@ -313,6 +349,36 @@ public class DriveTrain extends BaseHardware {
 
     public boolean motorsBusy(){
         return FL.isBusy() && BL.isBusy() && FR.isBusy() && BR.isBusy();
+    }
+
+    public double getGyroangle(){
+
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        gyroangle = Double.parseDouble(formatAngle(angles.angleUnit, angles.firstAngle));
+
+        return gyroangle;
+
+    }
+
+    public double getStartingValue(){
+        return startingValue;
+    }
+
+    public String formatAngle(AngleUnit angleUnit, double angle) {
+        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
+    }
+
+    public String formatDegrees(double degrees) {
+        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
+    }
+
+    public boolean calibrateGyro(){
+
+        return isCalib();
+    }
+
+    public boolean isCalib(){
+        return imu.isGyroCalibrated();
     }
 
 }

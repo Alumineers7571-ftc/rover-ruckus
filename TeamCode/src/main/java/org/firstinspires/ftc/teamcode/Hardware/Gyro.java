@@ -21,7 +21,9 @@ public class Gyro extends BaseHardware{
     private double gyroangle, startingValue;
 
 
-    public Gyro(){}
+    public Gyro(){
+
+    }
 
 
     public void init(HardwareMap hardwareMap, Telemetry telemetry) {

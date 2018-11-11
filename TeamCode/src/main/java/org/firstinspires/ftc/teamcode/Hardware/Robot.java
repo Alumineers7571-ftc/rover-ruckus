@@ -9,7 +9,7 @@ public class Robot{
 
     public DriveTrain drive = new DriveTrain();
     public MineralSystem mineralSystem = new MineralSystem();
-    public Gyro gyro = new Gyro();
+    //public Gyro gyro = new Gyro();
     public InputManager inputManager = new InputManager();
     public TeamMarkerer tm = new TeamMarkerer();
     public ComputerVision computerVision = new ComputerVision();

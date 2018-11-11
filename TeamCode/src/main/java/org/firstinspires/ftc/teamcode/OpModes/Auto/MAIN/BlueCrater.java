@@ -62,9 +62,9 @@ public class BlueCrater extends LinearOpMode {
 
 
             //telemetry.addData("GyroAngle: ", robot.gyro.gyroangle);
-            telemetry.addData("Angle: ", robot.gyro.angles);
+            //telemetry.addData("Angle: ", robot.gyro.angles);
 
-            currentAngle = robot.gyro.getGyroangle();
+            //currentAngle = robot.gyro.getGyroangle();
 
             switch (robostate) {
 
