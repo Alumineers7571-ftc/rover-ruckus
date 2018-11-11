@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -7,6 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Control.Math7571;
 
 public class DriveTrain extends BaseHardware {
 
@@ -31,6 +33,9 @@ public class DriveTrain extends BaseHardware {
 //---------------------------------------------------------------------------------------
 
     DriveTypes driveType;
+
+    Gyro gyro = new Gyro();
+    Math7571 mathEngine = new Math7571();
 
     public DcMotor FL, FR, BL, BR;
 
@@ -67,6 +72,8 @@ public class DriveTrain extends BaseHardware {
                 break;
             }
         }
+
+        gyro.init(hardwareMap, telemetry);
 
         telemetry.update();
 
@@ -230,8 +237,6 @@ public class DriveTrain extends BaseHardware {
 
     public void turnAbsoulte(double target, double heading){
 
-        //setMotorModes(DcMotor.RunMode.RUN_USING_ENCODER);
-
         double Error = heading - target;
         double Kp = 0.015;
         double leftPower;
@@ -240,8 +245,8 @@ public class DriveTrain extends BaseHardware {
         if ((Math.abs(Error)) > 2 ){
             leftPower = Error * Kp;
             rightPower = -Error * Kp;
-            Range.clip(leftPower,-1,1);
-            Range.clip(rightPower,-1,1);
+            leftPower = Range.clip(leftPower,-1,1);
+            rightPower = Range.clip(rightPower,-1,1);
 
             FL.setPower(leftPower);
             FR.setPower(rightPower);
@@ -255,6 +260,32 @@ public class DriveTrain extends BaseHardware {
             BR.setPower(0);
         }
 
+    }
+
+    public void turnRelative(double angle, double tolerence, LinearOpMode opMode) {
+
+        double wrappedAngle = mathEngine.wrapAround((int) (angle + gyro.getGyroangle()), -180, 180);
+        double currentAngle;
+        boolean done = false;
+
+        while (opMode.opModeIsActive() && !done) {
+
+            currentAngle = gyro.getGyroangle();
+
+            turnAbsoulte(wrappedAngle, currentAngle);
+
+            if ((currentAngle >= angle-tolerence) && (currentAngle <= angle+tolerence)) {
+                setThrottle(0);
+                done = true;
+            }
+
+            opMode.telemetry.addLine("angle: " + currentAngle);
+            opMode.telemetry.addLine("target: " + angle);
+            opMode.telemetry.addLine("wrapped: " + wrappedAngle);
+            opMode.telemetry.addLine("done: " + done);
+            opMode.telemetry.update();
+
+        }
     }
 
     public void moveEncoder(int inchesLeft, int inchesRight, double speed){

@@ -21,7 +21,7 @@ public class BlueCrater extends LinearOpMode {
     private Robot robot = new Robot();
     private SamplingOrderDetector detector;
 
-    ENUMS.CraterAutoStates robostate = null;
+    ENUMS.AutoStates robostate = null;
     SamplingOrderDetector.GoldLocation goldLocation = null;
 
     public double currentAngle;
@@ -56,12 +56,12 @@ public class BlueCrater extends LinearOpMode {
 
         waitForStart();
 
-        robostate = ENUMS.CraterAutoStates.START;
+        robostate = ENUMS.AutoStates.START;
 
         while(opModeIsActive()) {
 
 
-            telemetry.addData("GyroAngle: ", robot.gyro.gyroangle);
+            //telemetry.addData("GyroAngle: ", robot.gyro.gyroangle);
             telemetry.addData("Angle: ", robot.gyro.angles);
 
             currentAngle = robot.gyro.getGyroangle();
@@ -72,7 +72,7 @@ public class BlueCrater extends LinearOpMode {
 
                     //init
 
-                    robostate = ENUMS.CraterAutoStates.FINDGOLD;
+                    robostate = ENUMS.AutoStates.FINDGOLD;
                     break;
                 }
                 case FINDGOLD: {
@@ -82,7 +82,7 @@ public class BlueCrater extends LinearOpMode {
 
                     goldLocation = detector.getLastOrder();
 
-                    robostate = ENUMS.CraterAutoStates.TESTGYRO;
+                    robostate = ENUMS.AutoStates.TESTGYRO;
                     break;
                 }
                 case TESTGYRO: {
@@ -92,13 +92,13 @@ public class BlueCrater extends LinearOpMode {
                         robot.drive.setThrottle(0);
                         currentAngleOffset = currentAngle;
 
-                        robostate = ENUMS.CraterAutoStates.FINDWALL;
+                        robostate = ENUMS.AutoStates.FINDWALL;
 
                         break;
                     }
 
                 }
-                case GETTHATGOLD: {
+                case HITGOLD: {
 
                     if (goldLocation == SamplingOrderDetector.GoldLocation.LEFT) {
                         robot.drive.turnAbsoulte(20, currentAngle);

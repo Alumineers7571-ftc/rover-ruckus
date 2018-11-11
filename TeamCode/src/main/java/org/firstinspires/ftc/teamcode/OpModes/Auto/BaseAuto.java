@@ -16,7 +16,7 @@ public class BaseAuto extends OpMode {
     public Robot robot = new Robot();
     public SamplingOrderDetector detector;
 
-    public ENUMS.CraterAutoStates robostate = null;
+    public ENUMS.AutoStates robostate = null;
 
     //protected abstract void setup();
     //protected abstract void run();
@@ -49,7 +49,7 @@ public class BaseAuto extends OpMode {
     @Override
     public void start() {
 
-        robostate = ENUMS.CraterAutoStates.START;
+        robostate = ENUMS.AutoStates.START;
     }
 
     @Override
@@ -61,7 +61,7 @@ public class BaseAuto extends OpMode {
 
                 //init
 
-                robostate = ENUMS.CraterAutoStates.FINDGOLD;
+                robostate = ENUMS.AutoStates.FINDGOLD;
                 break;
             }
             case FINDGOLD: {

@@ -10,25 +10,27 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+import org.firstinspires.ftc.teamcode.Control.Math7571;
 import org.firstinspires.ftc.teamcode.Hardware.DriveTrain;
 import org.firstinspires.ftc.teamcode.Hardware.Gyro;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 
 import static org.firstinspires.ftc.teamcode.Hardware.DriveTrain.DriveTypes.TANK;
 
-@TeleOp(name = "good gyro 20 - offset 3", group = "Test")
+@TeleOp(name = "good gyro", group = "Test")
 public class IMUTesting extends LinearOpMode {
 
    //Robot rb = new Robot();
 
     DriveTrain drive = new DriveTrain();
     Gyro gyro = new Gyro();
+    Math7571 mathEngine = new Math7571();
 
-   final int T1_ANGLE = 20;
+   int T1_ANGLE;
 
-   final int ANGLE_OFFSET = 3;
+   int TOlERANCE = 2;
 
-   double currentAngle;
+   double currentAngle, startingAngle;
 
    boolean done = false;
 
@@ -37,6 +39,15 @@ public class IMUTesting extends LinearOpMode {
         drive.init(hardwareMap, telemetry, TANK);
         gyro.init(hardwareMap, telemetry);
 
+        while(!gyro.isCalib() && !isStopRequested()){}
+
+        telemetry.addLine("READY");
+        telemetry.update();
+
+        startingAngle = gyro.getGyroangle();
+
+        T1_ANGLE = mathEngine.wrapAround((int)(90 + startingAngle), -180, 180);
+
         waitForStart();
 
         while (opModeIsActive() && !done) {
@@ -44,11 +55,17 @@ public class IMUTesting extends LinearOpMode {
             currentAngle = gyro.getGyroangle();
 
             drive.turnAbsoulte(T1_ANGLE, currentAngle);
-            currentAngle = (int)currentAngle;
-            if (currentAngle >= T1_ANGLE - ANGLE_OFFSET && currentAngle <= T1_ANGLE + ANGLE_OFFSET) {
+
+            if (Math.abs(currentAngle - 90) < TOlERANCE) {
                 drive.setThrottle(0);
-                done = false;
+                done = true;
             }
+
+            telemetry.addLine("Angle: " + currentAngle);
+            telemetry.addLine("T1_ANGLE: " + T1_ANGLE);
+            telemetry.addLine("Starting Angle" + startingAngle);
+            telemetry.update();
+
         }
     }
 }

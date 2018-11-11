@@ -14,10 +14,11 @@ import java.util.Locale;
 
 public class Gyro extends BaseHardware{
 
-    public BNO055IMU imu;
+    private BNO055IMU imu;
 
     public Orientation angles;
-    public double gyroangle;
+
+    private double gyroangle, startingValue;
 
 
     public Gyro(){}
@@ -40,6 +41,8 @@ public class Gyro extends BaseHardware{
         // and named "imu".
         imu = hardwareMap.get(BNO055IMU.class, "imu");
 
+        startingValue = getGyroangle();
+
         imu.initialize(parameters);
 
     }
@@ -53,6 +56,10 @@ public class Gyro extends BaseHardware{
 
     }
 
+    public double getStartingValue(){
+        return startingValue;
+    }
+
     public String formatAngle(AngleUnit angleUnit, double angle) {
         return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
     }
@@ -61,4 +68,12 @@ public class Gyro extends BaseHardware{
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
 
+    public boolean calibrateGyro(){
+
+        return isCalib();
+    }
+
+    public boolean isCalib(){
+        return imu.isGyroCalibrated();
+    }
 }
