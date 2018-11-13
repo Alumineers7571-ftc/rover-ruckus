@@ -55,7 +55,7 @@ public class Depot extends LinearOpMode {
     Robot rb = new Robot();
 
     final int NAVTOGOLD_ONE_TURN_ANGLE = 50;
-    final int NAVTOGOLD_TWO_TURN_ANGLE = 140;
+    final int NAVTOGOLD_TWO_TURN_ANGLE = 220;
 
     final int SAMPLE_TURN_ANGLE = 90;
 
@@ -169,7 +169,7 @@ public class Depot extends LinearOpMode {
 
                 case NAVTOSAMPLE1:{
 
-                    while(rb.drive.turnRelative(NAVTOGOLD_ONE_TURN_ANGLE, 3, Depot.this)){
+                    while(rb.drive.turnRelative(NAVTOGOLD_ONE_TURN_ANGLE, 4, Depot.this)){
 
                     }
 
@@ -186,6 +186,7 @@ public class Depot extends LinearOpMode {
                     rb.drive.setThrottle(0.4);
                     sleep(2000);
                     rb.drive.setThrottle(0);
+                    sleep(300);
 
                     robo = ENUMS.AutoStates.NAVTOSAMPLE2;
                     break;
@@ -243,6 +244,10 @@ public class Depot extends LinearOpMode {
 
                     sleep(200);
                     rb.tm.setTMDown();
+                    sleep(100);
+                    rb.drive.setThrottle(-0.8);
+                    sleep(1000);
+                    rb.drive.setThrottle(0);
 
                     robo = ENUMS.AutoStates.FINDCRATER;
                     break;

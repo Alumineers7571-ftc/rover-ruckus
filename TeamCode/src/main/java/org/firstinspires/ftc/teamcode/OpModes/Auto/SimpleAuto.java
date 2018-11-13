@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.Auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.Hardware.DriveTrain;
 
 
 @Autonomous (name = "SimpleAuto", group = "Simple")
+@Disabled
 public class SimpleAuto extends OpMode {
 
     DriveTrain dt = new DriveTrain();

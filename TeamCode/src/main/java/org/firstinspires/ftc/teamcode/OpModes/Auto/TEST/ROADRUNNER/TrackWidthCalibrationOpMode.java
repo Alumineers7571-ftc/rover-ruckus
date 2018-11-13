@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.OpModes.Auto.TEST.ROADRUNNER;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 
@@ -12,6 +13,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
  * during open-loop control.
  */
 @Autonomous (name = "CalibOpModeRR")
+@Disabled
 public abstract class TrackWidthCalibrationOpMode extends LinearOpMode {
 
     public static int TOTAL_REVOLUTIONS = 4;

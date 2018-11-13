@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.OpModes.Auto.TEST.ENCODERS;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Hardware.DriveTrain;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 
 @Autonomous (name = "Drive With Encoders")
+@Disabled
 public class DriveWithEncoders extends LinearOpMode {
 
     @Override

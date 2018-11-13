@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.*;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryConfig;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.OpModes.Auto.TEST.ROADRUNNER.AssetsTrajectoryLoader;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.teamcode.OpModes.Auto.TEST.ROADRUNNER.SampleMecanum
 import java.io.IOException;
 
 @Autonomous(name = "BasicAutoRR")
+@Disabled
 public class BasicAutoRR extends LinearOpMode {
 
     @Override

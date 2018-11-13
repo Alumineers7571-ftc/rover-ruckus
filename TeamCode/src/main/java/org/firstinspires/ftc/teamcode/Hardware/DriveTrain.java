@@ -231,10 +231,10 @@ public class DriveTrain extends BaseHardware {
 
             case MECANUM:
 
-                FL.setPower(gamepad.left_stick_y + gamepad.right_stick_x + gamepad.left_stick_x);
-                FR.setPower(gamepad.left_stick_y - gamepad.right_stick_x - gamepad.left_stick_x);
-                BL.setPower(gamepad.left_stick_y + gamepad.right_stick_x - gamepad.left_stick_x);
-                BR.setPower(gamepad.left_stick_y - gamepad.right_stick_x + gamepad.left_stick_x);
+                FL.setPower((-gamepad.left_stick_y) + gamepad.right_stick_x + gamepad.left_stick_x);
+                FR.setPower((-gamepad.left_stick_y) - gamepad.right_stick_x - gamepad.left_stick_x);
+                BL.setPower((-gamepad.left_stick_y) + gamepad.right_stick_x - gamepad.left_stick_x);
+                BR.setPower((-gamepad.left_stick_y) - gamepad.right_stick_x + gamepad.left_stick_x);
 
                 break;
 
@@ -310,12 +310,12 @@ public class DriveTrain extends BaseHardware {
 
             if ((currentAngle >= wrappedAngle-tolerence) && (currentAngle <= wrappedAngle+tolerence)) {
                 setThrottle(0);
+                wrappedAngle = 0;
                 trSetUp = false;
                 return false;
             }
 
             opMode.telemetry.addLine("angle: " + currentAngle);
-            opMode.telemetry.addLine("target: " + angle);
             opMode.telemetry.addLine("wrapped: " + wrappedAngle);
             opMode.telemetry.addLine("setUp: " + trSetUp);
             opMode.telemetry.update();

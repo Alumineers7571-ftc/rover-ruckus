@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.Auto.TEST;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Control.FinalValues;
@@ -8,6 +9,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Recording.InputManager;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 
 @Autonomous (name = "Start To TM", group = "test")
+@Disabled
 public class StartToTM extends LinearOpMode{
 
     private Robot robot = new Robot();

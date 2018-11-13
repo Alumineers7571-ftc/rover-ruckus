@@ -20,6 +20,8 @@ public class TeamMarkerer extends BaseHardware{
 
         teamMarkerer = hardwareMap.servo.get("tm");
 
+        setTMUp();
+
         telemetry.addLine("tm good");
         telemetry.update();
 
