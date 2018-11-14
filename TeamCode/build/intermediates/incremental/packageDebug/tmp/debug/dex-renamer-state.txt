@@ -1,7 +1,7 @@
-#Mon Nov 12 11:54:59 EST 2018
-base.2=/home/nick/StudioProjects/rover-ruckus/TeamCode/build/intermediates/transforms/dexMerger/debug/0
-base.1=/home/nick/StudioProjects/rover-ruckus/TeamCode/build/intermediates/transforms/dexMerger/debug/1
-base.0=/home/nick/StudioProjects/rover-ruckus/TeamCode/build/intermediates/transforms/dexMerger/debug/10
+#Wed Nov 14 13:05:26 EST 2018
+base.2=C\:\\Users\\005572\\StudioProjects\\rover-ruckus\\TeamCode\\build\\intermediates\\transforms\\dexMerger\\debug\\1
+base.1=C\:\\Users\\005572\\StudioProjects\\rover-ruckus\\TeamCode\\build\\intermediates\\transforms\\dexMerger\\debug\\4
+base.0=C\:\\Users\\005572\\StudioProjects\\rover-ruckus\\TeamCode\\build\\intermediates\\transforms\\dexMerger\\debug\\2
 path.9=classes.dex
 path.8=classes.dex
 path.7=classes.dex
@@ -25,13 +25,13 @@ renamed.0=classes.dex
 renamed.11=classes12.dex
 renamed.10=classes11.dex
 path.11=classes2.dex
-base.11=/home/nick/StudioProjects/rover-ruckus/TeamCode/build/intermediates/transforms/dexMerger/debug/1
+base.11=C\:\\Users\\005572\\StudioProjects\\rover-ruckus\\TeamCode\\build\\intermediates\\transforms\\dexMerger\\debug\\1
 path.10=classes.dex
-base.10=/home/nick/StudioProjects/rover-ruckus/TeamCode/build/intermediates/transforms/dexMerger/debug/8
-base.9=/home/nick/StudioProjects/rover-ruckus/TeamCode/build/intermediates/transforms/dexMerger/debug/9
-base.8=/home/nick/StudioProjects/rover-ruckus/TeamCode/build/intermediates/transforms/dexMerger/debug/6
-base.7=/home/nick/StudioProjects/rover-ruckus/TeamCode/build/intermediates/transforms/dexMerger/debug/7
-base.6=/home/nick/StudioProjects/rover-ruckus/TeamCode/build/intermediates/transforms/dexMerger/debug/4
-base.5=/home/nick/StudioProjects/rover-ruckus/TeamCode/build/intermediates/transforms/dexMerger/debug/5
-base.4=/home/nick/StudioProjects/rover-ruckus/TeamCode/build/intermediates/transforms/dexMerger/debug/2
-base.3=/home/nick/StudioProjects/rover-ruckus/TeamCode/build/intermediates/transforms/dexMerger/debug/3
+base.10=C\:\\Users\\005572\\StudioProjects\\rover-ruckus\\TeamCode\\build\\intermediates\\transforms\\dexMerger\\debug\\0
+base.9=C\:\\Users\\005572\\StudioProjects\\rover-ruckus\\TeamCode\\build\\intermediates\\transforms\\dexMerger\\debug\\9
+base.8=C\:\\Users\\005572\\StudioProjects\\rover-ruckus\\TeamCode\\build\\intermediates\\transforms\\dexMerger\\debug\\7
+base.7=C\:\\Users\\005572\\StudioProjects\\rover-ruckus\\TeamCode\\build\\intermediates\\transforms\\dexMerger\\debug\\10
+base.6=C\:\\Users\\005572\\StudioProjects\\rover-ruckus\\TeamCode\\build\\intermediates\\transforms\\dexMerger\\debug\\5
+base.5=C\:\\Users\\005572\\StudioProjects\\rover-ruckus\\TeamCode\\build\\intermediates\\transforms\\dexMerger\\debug\\8
+base.4=C\:\\Users\\005572\\StudioProjects\\rover-ruckus\\TeamCode\\build\\intermediates\\transforms\\dexMerger\\debug\\3
+base.3=C\:\\Users\\005572\\StudioProjects\\rover-ruckus\\TeamCode\\build\\intermediates\\transforms\\dexMerger\\debug\\6

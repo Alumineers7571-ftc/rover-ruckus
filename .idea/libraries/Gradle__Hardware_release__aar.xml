@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="Gradle: Hardware-release:@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/Hardware-release.aar/25caf70f6706ea0098962fec44824d12/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/Hardware-release.aar/25caf70f6706ea0098962fec44824d12/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/Hardware-release.aar/cd76c454042b92bc6de76486098f9726/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/Hardware-release.aar/cd76c454042b92bc6de76486098f9726/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

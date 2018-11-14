@@ -8,6 +8,7 @@ import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.Dogeforia;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -51,22 +52,21 @@ public class Depot extends LinearOpMode {
     List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
 
     GoldAlignDetector detector;
-    
+
     Robot rb = new Robot();
 
-    final int NAVTOGOLD_ONE_TURN_ANGLE = 50;
-    final int NAVTOGOLD_TWO_TURN_ANGLE = 220;
+    //final int NAVTOGOLD_ONE_TURN_ANGLE = 50;
+    //final int NAVTOGOLD_TWO_TURN_ANGLE = -140;
 
-    final int SAMPLE_TURN_ANGLE = 90;
+    //final int SAMPLE_TURN_ANGLE = 90;
 
-    final int PRECISE_ANGLE_OFFSET = 5;
-    final int GENERAL_ANGLE_OFFSET = 5;
+    final int ANGLE_OFFSET = 5;
 
     double currentAngle;
 
     boolean NAV1_TURN_DONE = false, NAV2_TURN_DONE = false, SAMPLE_TURN_DONE = false;
 
-    ENUMS.AutoStates robo = ENUMS.AutoStates.NAVTOSAMPLE1;
+    ENUMS.AutoStates robo = ENUMS.AutoStates.START;
 
     @Override
     public void runOpMode() {
@@ -163,58 +163,22 @@ public class Depot extends LinearOpMode {
 
                 case START: {
 
-                    robo = ENUMS.AutoStates.NAVTOSAMPLE1;
-                    break;
-                }
-
-                case NAVTOSAMPLE1:{
-
-                    while(rb.drive.turnRelative(NAVTOGOLD_ONE_TURN_ANGLE, 4, Depot.this)){
-
-                    }
-
-                    robo = ENUMS.AutoStates.MOVETOTURN2;
-
-                    break;
-                }
-
-                case MOVETOTURN2:{
-
-                    currentAngle = 0;
-
-                    sleep(300);
-                    rb.drive.setThrottle(0.4);
-                    sleep(2000);
-                    rb.drive.setThrottle(0);
-                    sleep(300);
-
-                    robo = ENUMS.AutoStates.NAVTOSAMPLE2;
-                    break;
-
-                }
-
-                case NAVTOSAMPLE2:{
-
-                    while(rb.drive.turnRelative(NAVTOGOLD_TWO_TURN_ANGLE, 3, Depot.this)){
-
-                    }
+                    rb.drive.adjustHeading(-45, true);
 
                     robo = ENUMS.AutoStates.FINDGOLD;
-
                     break;
-
                 }
 
                 case FINDGOLD: {
                     telemetry.addData("IsAligned", detector.getAligned()); // Is the bot aligned with the gold mineral
                     telemetry.addData("X Pos", detector.getXPosition()); // Gold X pos.
+                    telemetry.update();
 
                     if (detector.isFound()) {
-                        rb.drive.setThrottle(0);
                         detector.disable();
-                        robo = ENUMS.AutoStates.TURNTOGOLD;
+                        robo = ENUMS.AutoStates.HITGOLD;
                     } else {
-                        rb.drive.setThrottle(0.3);
+                        rb.drive.adjustHeading(45, true);
 
                     }
 
@@ -223,18 +187,16 @@ public class Depot extends LinearOpMode {
 
                 case TURNTOGOLD: {
 
-                    detector.disable();
 
-                    while(rb.drive.turnRelative(SAMPLE_TURN_ANGLE, 4, Depot.this)){
 
-                    }
+                    //rb.drive.adjustHeading(SAMPLE_TURN_ANGLE, true);
 
                     break;
                 }
 
                 case HITGOLD: {
-                    rb.drive.setThrottle(0.5);
-                    sleep(1500);
+                    rb.drive.setThrottle(0.4);
+                    sleep(2000);
                     rb.drive.setThrottle(0);
                     robo = ENUMS.AutoStates.DROPTM;
                     break;
