@@ -62,9 +62,13 @@ public class Depot extends LinearOpMode {
 
     final int ANGLE_OFFSET = 5;
 
+    int count = 0;
+
     double currentAngle;
 
     boolean NAV1_TURN_DONE = false, NAV2_TURN_DONE = false, SAMPLE_TURN_DONE = false;
+
+    ENUMS.GoldPosition goldPosition = ENUMS.GoldPosition.UNKNOWN;
 
     ENUMS.AutoStates robo = ENUMS.AutoStates.START;
 
@@ -141,8 +145,8 @@ public class Depot extends LinearOpMode {
         detector = new GoldAlignDetector();
         detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance(), 0, true);
         detector.useDefaults();
-        detector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
-        //detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
+        detector.areaScoringMethod = DogeCV.AreaScoringMethod.PERFECT_AREA; // Can also be PERFECT_AREA
+        detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
         detector.downscale = 0.8;
 
         vuforia.setDogeCVDetector(detector);
@@ -163,7 +167,12 @@ public class Depot extends LinearOpMode {
 
                 case START: {
 
-                    rb.drive.adjustHeading(-45, true);
+                    rb.drive.setThrottle(0.4);
+                    sleep(1000);
+                    rb.drive.setThrottle(0);
+
+                    rb.drive.adjustHeadingRelative(35, true);
+                    sleep(2000);
 
                     robo = ENUMS.AutoStates.FINDGOLD;
                     break;
@@ -176,28 +185,67 @@ public class Depot extends LinearOpMode {
 
                     if (detector.isFound()) {
                         detector.disable();
-                        robo = ENUMS.AutoStates.HITGOLD;
+                        sleep(300);
+                        robo = ENUMS.AutoStates.STOREGOLDPOS;
                     } else {
-                        rb.drive.adjustHeading(45, true);
+
+                        rb.drive.adjustHeadingRelative(-30, true);
+                        sleep(3000);
+                        rb.drive.setThrottle(0);
+                        sleep(1000);
+                        count++;
 
                     }
 
                     break;
                 }
 
-                case TURNTOGOLD: {
+                case STOREGOLDPOS: {
 
+                        if(count == 0){
+                            goldPosition = ENUMS.GoldPosition.LEFT;
+                        } else if (count == 1){
+                            goldPosition = ENUMS.GoldPosition.CENTER;
+                        } else if (count == 2){
+                            goldPosition = ENUMS.GoldPosition.RIGHT;
+                        }
 
-
-                    //rb.drive.adjustHeading(SAMPLE_TURN_ANGLE, true);
-
+                    robo = ENUMS.AutoStates.HITGOLD;
                     break;
                 }
 
                 case HITGOLD: {
-                    rb.drive.setThrottle(0.4);
-                    sleep(2000);
-                    rb.drive.setThrottle(0);
+
+                    if (goldPosition == ENUMS.GoldPosition.LEFT){
+
+                        rb.drive.setThrottle(0.4);
+                        sleep(1500);
+                        rb.drive.setThrottle(0);
+                        rb.drive.adjustHeadingRelative(-90, true);
+                        sleep(4000);
+                        rb.drive.setThrottle(0.4);
+                        sleep(1500);
+                        rb.drive.setThrottle(0);
+
+                    } else if (goldPosition == ENUMS.GoldPosition.CENTER) {
+
+                        rb.drive.setThrottle(0.8);
+                        sleep(2000);
+                        rb.drive.setThrottle(0);
+
+                    } else if (goldPosition == ENUMS.GoldPosition.RIGHT){
+
+                        rb.drive.setThrottle(0.4);
+                        sleep(1500);
+                        rb.drive.setThrottle(0);
+                        rb.drive.adjustHeadingRelative(90, true);
+                        sleep(4000);
+                        rb.drive.setThrottle(0.4);
+                        sleep(1500);
+                        rb.drive.setThrottle(0);
+
+                    }
+
                     robo = ENUMS.AutoStates.DROPTM;
                     break;
                 }
@@ -224,6 +272,7 @@ public class Depot extends LinearOpMode {
                     stop();
                 }
             }
+            idle();
         }
 
     }

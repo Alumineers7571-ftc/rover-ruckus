@@ -17,6 +17,7 @@ public class PerfectAreaScorer extends DogeCVScorer {
      * @param weight - How much to weight the final score (0.001 - 0.1 is usually good)
      */
     public PerfectAreaScorer(double perfectArea, double weight){
+
         this.weight = weight;
         this.perfectArea = perfectArea;
 

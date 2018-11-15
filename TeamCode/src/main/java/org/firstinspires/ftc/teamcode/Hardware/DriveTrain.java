@@ -333,7 +333,7 @@ public class DriveTrain extends BaseHardware {
         float curHeading = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
 
         //If within a reasonable degree of error of the target heading, set power to zero on all motors.
-        if (Math.abs(curHeading - targetHeading) <= 2) {
+        if (Math.abs(curHeading - targetHeading) <= 1) {
             setThrottle(0);
             return;
         }
@@ -395,6 +395,15 @@ public class DriveTrain extends BaseHardware {
         BL.setPower(leftPower);
         FR.setPower(rightPower);
         BR.setPower(rightPower);
+
+    }
+
+    public void adjustHeadingRelative(int targetHeading, boolean slow){
+
+        targetHeading += getGyroangle();
+
+        adjustHeading(targetHeading, slow);
+
 
     }
 
