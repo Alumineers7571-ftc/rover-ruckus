@@ -178,7 +178,7 @@ public class Depot extends LinearOpMode {
                     rb.drive.adjustHeadingRelative(35, true);
                     sleep(2000);
 
-                    robo = ENUMS.AutoStates.FINDGOLD;
+                    robo = ENUMS.AutoStates.CHECKLEFT;
                     break;
                 }
 
@@ -205,7 +205,7 @@ public class Depot extends LinearOpMode {
                     rb.drive.setThrottle(0);
                     sleep(1000);
 
-                    for (int i = 0; i < 5; i++){
+                    for (int i = 0; i < 5 && opModeIsActive(); i++){
                         rb.drive.adjustHeadingRelative(-1, true);
                         if(detector.isFound()){
                             detector.disable();
@@ -228,7 +228,7 @@ public class Depot extends LinearOpMode {
                     rb.drive.setThrottle(0);
                     sleep(1000);
 
-                    for (int i = 0; i < 5; i++){
+                    for (int i = 0; i < 5 && opModeIsActive(); i++){
                         rb.drive.adjustHeadingRelative(-1, true);
                         if(detector.isFound()){
                             detector.disable();

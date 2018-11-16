@@ -35,7 +35,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 
 @Autonomous (name = "DepotScrim")
 @Disabled
-public class Depot extends LinearOpMode {
+public class DepotScrim extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
     private static final float mmPerInch = 25.4f;
