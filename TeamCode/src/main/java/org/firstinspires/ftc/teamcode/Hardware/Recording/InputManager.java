@@ -28,10 +28,12 @@ public class InputManager extends BaseHardware {
 
     //File file;
 
-    double[] leftPowerValues;
-    double[] rightPowerValues;
+    double[] leftFrontValues;
+    double[] leftBackValues;
+    double[] rightFrontValues;
+    double[] rightBackValues;
 
-    double ly, rx;
+    double ly, rx, lx;
 
     int countLines, countReplays;
 
@@ -58,7 +60,7 @@ public class InputManager extends BaseHardware {
     public void writeInputs(Gamepad gamepad1){
 
         try {
-            bufferedWriter.write(gamepad1.left_stick_y + ";" + gamepad1.right_stick_x);
+            bufferedWriter.write(gamepad1.left_stick_y + ";" + gamepad1.right_stick_x + ";" + gamepad1.left_stick_x);
             bufferedWriter.newLine();
         } catch (IOException e) {
             e.printStackTrace();
@@ -72,8 +74,8 @@ public class InputManager extends BaseHardware {
         String[] tempString;
         String line;
 
-        leftPowerValues = new double[50000];
-        rightPowerValues = new double[50000];
+        leftFrontValues = new double[50000];
+        rightFrontValues = new double[50000];
 
         try {
 
@@ -88,9 +90,12 @@ public class InputManager extends BaseHardware {
 
                 ly = Double.parseDouble(tempString[0]);
                 rx = Double.parseDouble(tempString[1]);
+                lx = Double.parseDouble(tempString[2]);
 
-                leftPowerValues[countLines] = Range.clip(ly + rx, -1, 1);
-                rightPowerValues[countLines] = Range.clip(ly - rx, -1, 1);
+                leftFrontValues[countLines] = Range.clip(ly + rx + lx, -1, 1);
+                leftBackValues[countLines] = Range.clip(ly + rx - lx, -1, 1);
+                rightFrontValues[countLines] = Range.clip(ly - rx - lx, -1, 1);
+                rightBackValues[countLines] = Range.clip(ly - rx + lx, -1, 1);
 
                 countLines++;
             }
@@ -106,7 +111,7 @@ public class InputManager extends BaseHardware {
 
     public void replayInputs(){
         while(countReplays <= countLines) {
-            dt.runMotorsSides(leftPowerValues[countReplays], rightPowerValues[countReplays]);
+            dt.runMotorsIndiv(leftFrontValues[countReplays], rightFrontValues[countReplays], leftBackValues[countReplays], rightBackValues[countReplays]);
             countReplays++;
         }
     }

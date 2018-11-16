@@ -33,7 +33,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
 
-@Autonomous (name = "Depot")
+@Autonomous (name = "Depot", group = "MAIN")
 public class Depot extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -62,7 +62,9 @@ public class Depot extends LinearOpMode {
 
     final int ANGLE_OFFSET = 5;
 
-    int count = 0;
+    //int count = 0;
+
+    boolean goldFound = false;
 
     double currentAngle;
 
@@ -144,10 +146,12 @@ public class Depot extends LinearOpMode {
 
         detector = new GoldAlignDetector();
         detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance(), 0, true);
+        detector.downscale = 0.3;
         detector.useDefaults();
-        detector.areaScoringMethod = DogeCV.AreaScoringMethod.PERFECT_AREA; // Can also be PERFECT_AREA
-        detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
-        detector.downscale = 0.8;
+
+        // Optional Tuning
+        detector.alignSize = 50;
+        detector.alignPosOffset = 200;
 
         vuforia.setDogeCVDetector(detector);
         vuforia.enableDogeCV();
@@ -178,43 +182,72 @@ public class Depot extends LinearOpMode {
                     break;
                 }
 
-                case FINDGOLD: {
-                    telemetry.addData("IsAligned", detector.getAligned()); // Is the bot aligned with the gold mineral
-                    telemetry.addData("X Pos", detector.getXPosition()); // Gold X pos.
-                    telemetry.update();
+                case CHECKLEFT: {
 
                     if (detector.isFound()) {
                         detector.disable();
-                        sleep(300);
-                        robo = ENUMS.AutoStates.STOREGOLDPOS;
+                        goldFound = true;
+                        goldPosition = ENUMS.GoldPosition.LEFT;
+                        robo = ENUMS.AutoStates.HITGOLD;
                     } else {
 
-                        rb.drive.adjustHeadingRelative(-30, true);
-                        sleep(3000);
-                        rb.drive.setThrottle(0);
-                        sleep(1000);
-                        count++;
+                        robo = ENUMS.AutoStates.CHECKCENTER;
 
                     }
 
                     break;
                 }
 
-                case STOREGOLDPOS: {
+                case CHECKCENTER:{
 
-                        if(count == 0){
-                            goldPosition = ENUMS.GoldPosition.LEFT;
-                        } else if (count == 1){
+                    rb.drive.adjustHeadingRelative(-25, true);
+                    sleep(3000);
+                    rb.drive.setThrottle(0);
+                    sleep(1000);
+
+                    for (int i = 0; i < 5; i++){
+                        rb.drive.adjustHeadingRelative(-1, true);
+                        if(detector.isFound()){
+                            detector.disable();
+                            goldFound = true;
                             goldPosition = ENUMS.GoldPosition.CENTER;
-                        } else if (count == 2){
-                            goldPosition = ENUMS.GoldPosition.RIGHT;
+                            robo = ENUMS.AutoStates.HITGOLD;
+                        } else {
+                            robo = ENUMS.AutoStates.CHECKRIGHT;
+                            break;
                         }
+                    }
 
-                    robo = ENUMS.AutoStates.HITGOLD;
+                    break;
+                }
+
+                case CHECKRIGHT:{
+
+                    rb.drive.adjustHeadingRelative(-25, true);
+                    sleep(3000);
+                    rb.drive.setThrottle(0);
+                    sleep(1000);
+
+                    for (int i = 0; i < 5; i++){
+                        rb.drive.adjustHeadingRelative(-1, true);
+                        if(detector.isFound()){
+                            detector.disable();
+                            goldFound = true;
+                            goldPosition = ENUMS.GoldPosition.RIGHT;
+                            robo = ENUMS.AutoStates.HITGOLD;
+                        } else {
+                            goldPosition = ENUMS.GoldPosition.UNKNOWN;
+                            robo = ENUMS.AutoStates.HITGOLD;
+                            break;
+                        }
+                    }
+
                     break;
                 }
 
                 case HITGOLD: {
+
+                    //rb.mineralSystem.runIntake(1);
 
                     if (goldPosition == ENUMS.GoldPosition.LEFT){
 
@@ -244,7 +277,13 @@ public class Depot extends LinearOpMode {
                         sleep(1500);
                         rb.drive.setThrottle(0);
 
+                    } else if (goldPosition == ENUMS.GoldPosition.UNKNOWN){
+
+                        //hit the one it is most likely to miss (after some testing)
+
                     }
+
+                    //rb.mineralSystem.runIntake(0);
 
                     robo = ENUMS.AutoStates.DROPTM;
                     break;
@@ -272,6 +311,11 @@ public class Depot extends LinearOpMode {
                     stop();
                 }
             }
+
+            telemetry.addData("IsAligned", detector.getAligned()); // Is the bot aligned with the gold mineral
+            telemetry.addData("X Pos", detector.getXPosition()); // Gold X pos.
+            telemetry.update();
+
             idle();
         }
 

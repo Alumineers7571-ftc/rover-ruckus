@@ -28,7 +28,6 @@ public class DriveTrain extends BaseHardware {
     static final double     DRIVE_SPEED             = 0.4;
     static final double     TURN_SPEED              = 0.3;
 
-
     Telemetry telemetry;
 
     public DriveTrain() {
@@ -76,8 +75,8 @@ public class DriveTrain extends BaseHardware {
         BL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        FL.setDirection(DcMotorSimple.Direction.REVERSE);
-        BL.setDirection(DcMotorSimple.Direction.REVERSE);
+        FR.setDirection(DcMotorSimple.Direction.REVERSE);
+        BR.setDirection(DcMotorSimple.Direction.REVERSE);
 
         switch (driveType) {
             case MECANUM: {
@@ -231,10 +230,10 @@ public class DriveTrain extends BaseHardware {
 
             case MECANUM:
 
-                FL.setPower((-gamepad.left_stick_y) + gamepad.right_stick_x + gamepad.left_stick_x);
-                FR.setPower((-gamepad.left_stick_y) - gamepad.right_stick_x - gamepad.left_stick_x);
-                BL.setPower((-gamepad.left_stick_y) + gamepad.right_stick_x - gamepad.left_stick_x);
-                BR.setPower((-gamepad.left_stick_y) - gamepad.right_stick_x + gamepad.left_stick_x);
+                FL.setPower((gamepad.left_stick_y) + gamepad.right_stick_x + gamepad.left_stick_x);
+                FR.setPower((gamepad.left_stick_y) - gamepad.right_stick_x - gamepad.left_stick_x);
+                BL.setPower((gamepad.left_stick_y) + gamepad.right_stick_x - gamepad.left_stick_x);
+                BR.setPower((gamepad.left_stick_y) - gamepad.right_stick_x + gamepad.left_stick_x);
 
                 break;
 
@@ -266,7 +265,7 @@ public class DriveTrain extends BaseHardware {
         }
     }
 
-
+/*
     public void turnAbsoulte(double target, double heading){
 
         double Error = heading - target;
@@ -322,9 +321,12 @@ public class DriveTrain extends BaseHardware {
 
             return true;
 
-    }
+    }*/
 
     public void adjustHeading(int targetHeading, boolean slow) {
+
+        //CREDIT TO 0207!!
+
         //Initialize the turnleft boolean.
         boolean turnLeft = false;
         double leftPower = 0, rightPower = 0;
@@ -399,15 +401,48 @@ public class DriveTrain extends BaseHardware {
     }
 
     public void adjustHeadingRelative(int targetHeading, boolean slow){
-
         targetHeading += getGyroangle();
-
         adjustHeading(targetHeading, slow);
-
-
     }
 
+    public void safeStrafe(float targetHeading, boolean isRight, Telemetry telemetry, double powerCenter) {
 
+        double leftPower = 0, rightPower = 0, driveScale;
+
+        float headingError;
+
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        headingError = targetHeading - angles.firstAngle;
+        driveScale = headingError * .0035;
+
+        leftPower = powerCenter - driveScale;
+        rightPower = powerCenter + driveScale;
+
+        if (leftPower > 1)
+            leftPower = 1;
+        else if (leftPower < 0)
+            leftPower = 0;
+
+        if (rightPower > 1)
+            rightPower = 1;
+        else if (rightPower < 0)
+            rightPower = 0;
+
+
+        if (isRight) {
+            FL.setPower(leftPower);
+            FR.setPower(-rightPower);
+            BL.setPower(-leftPower);
+            BR.setPower(rightPower);
+        } else {
+            FL.setPower(-leftPower);
+            FR.setPower(rightPower);
+            BL.setPower(leftPower);
+            BR.setPower(-rightPower);
+        }
+        telemetry.addData("leftPower", leftPower);
+        telemetry.addData("rightPower", rightPower);
+    }
 
     public void moveEncoder(int inchesLeft, int inchesRight, double speed){
 
