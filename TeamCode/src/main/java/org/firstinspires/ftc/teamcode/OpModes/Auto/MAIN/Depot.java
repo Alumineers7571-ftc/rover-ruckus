@@ -32,6 +32,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
+import static org.firstinspires.ftc.teamcode.Control.FinalValues.goldPosMissedMostOften;
 
 @Autonomous (name = "Depot", group = "MAIN")
 public class Depot extends LinearOpMode {
@@ -74,10 +75,15 @@ public class Depot extends LinearOpMode {
 
     ENUMS.AutoStates robo = ENUMS.AutoStates.START;
 
+    long delayTime = 0;
+
+    int startingAngle = 0;
+
     @Override
     public void runOpMode() {
 
-        rb.init(hardwareMap, telemetry, DriveTrain.DriveTypes.TANK);
+        rb.init(hardwareMap, telemetry, DriveTrain.DriveTypes.TANK,true);
+        rb.drive.initGyro();
 
         webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
 
@@ -146,12 +152,16 @@ public class Depot extends LinearOpMode {
 
         detector = new GoldAlignDetector();
         detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance(), 0, true);
-        detector.downscale = 0.3;
         detector.useDefaults();
 
-        // Optional Tuning
-        detector.alignSize = 50;
-        detector.alignPosOffset = 200;
+        detector.downscale = 0.4; // How much to downscale the input frames
+
+        detector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
+        //detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
+        detector.maxAreaScorer.weight = 0.005;
+
+        detector.ratioScorer.weight = 5;
+        detector.ratioScorer.perfectRatio = 1.0;
 
         vuforia.setDogeCVDetector(detector);
         vuforia.enableDogeCV();
@@ -160,10 +170,37 @@ public class Depot extends LinearOpMode {
 
         rb.tm.setTMUp();
 
-        telemetry.addData("Ready", "true");
-        telemetry.update();
+        startingAngle = (int)rb.drive.getGyroangle();
+
+        telemetry.addLine("Ready");
+
+        while(!isStarted()){
+
+            if(gamepad1.y){
+                delayTime += 1000;
+            } else if (gamepad1.x){
+                if (delayTime > 0) {
+                    delayTime -= 1000;
+                }
+            }
+
+            if(detector.isFound()){
+                robo = ENUMS.AutoStates.EARLYCENTERGOLD;
+            }
+
+            telemetry.addData("delayTime", delayTime);
+            telemetry.addData("gold", detector.isFound());
+            telemetry.addData("robo", robo);
+            telemetry.addData("cangle", rb.drive.getGyroangle());
+            telemetry.update();
+
+            sleep(1000);
+
+        }
 
         waitForStart();
+
+        sleep(delayTime);
 
         while (opModeIsActive() && !isStopRequested()) {
 
@@ -175,10 +212,23 @@ public class Depot extends LinearOpMode {
                     sleep(1000);
                     rb.drive.setThrottle(0);
 
-                    rb.drive.adjustHeadingRelative(35, true);
-                    sleep(2000);
+                    sleep(1000);
 
-                    robo = ENUMS.AutoStates.CHECKLEFT;
+                    if(detector.isFound()) {
+
+                        detector.disable();
+                        goldFound = true;
+                        goldPosition = ENUMS.GoldPosition.CENTER;
+                        robo = ENUMS.AutoStates.HITGOLD;
+
+                    } else {
+
+                        rb.drive.adjustHeadingRelative(35, false);
+                        sleep(2000);
+
+                        robo = ENUMS.AutoStates.CHECKLEFT;
+                    }
+                    telemetry.update();
                     break;
                 }
 
@@ -195,15 +245,16 @@ public class Depot extends LinearOpMode {
 
                     }
 
+                    telemetry.update();
                     break;
                 }
 
                 case CHECKCENTER:{
 
-                    rb.drive.adjustHeadingRelative(-25, true);
+                    rb.drive.adjustHeadingRelative(-25, false);
                     sleep(3000);
                     rb.drive.setThrottle(0);
-                    sleep(1000);
+                    sleep(400);
 
                     for (int i = 0; i < 5 && opModeIsActive(); i++){
                         rb.drive.adjustHeadingRelative(-1, true);
@@ -216,8 +267,10 @@ public class Depot extends LinearOpMode {
                             robo = ENUMS.AutoStates.CHECKRIGHT;
                             break;
                         }
+                        telemetry.update();
                     }
 
+                    telemetry.update();
                     break;
                 }
 
@@ -234,14 +287,23 @@ public class Depot extends LinearOpMode {
                             detector.disable();
                             goldFound = true;
                             goldPosition = ENUMS.GoldPosition.RIGHT;
-                            robo = ENUMS.AutoStates.HITGOLD;
-                        } else {
-                            goldPosition = ENUMS.GoldPosition.UNKNOWN;
-                            robo = ENUMS.AutoStates.HITGOLD;
-                            break;
                         }
+                        telemetry.update();
                     }
 
+                    robo = ENUMS.AutoStates.HITGOLD;
+                    telemetry.update();
+                    break;
+                }
+
+                case EARLYCENTERGOLD:{
+
+                    rb.drive.setThrottle(0.4);
+                    sleep(4000);
+
+
+                    robo = ENUMS.AutoStates.DROPTM;
+                    telemetry.update();
                     break;
                 }
 
@@ -251,39 +313,73 @@ public class Depot extends LinearOpMode {
 
                     if (goldPosition == ENUMS.GoldPosition.LEFT){
 
-                        rb.drive.setThrottle(0.4);
-                        sleep(1500);
+                        rb.drive.adjustHeadingRelative(-25, true);
+                        sleep(3000);
                         rb.drive.setThrottle(0);
-                        rb.drive.adjustHeadingRelative(-90, true);
-                        sleep(4000);
+
+                        sleep(500);
+
+                        rb.drive.safeStrafe((float) rb.drive.getGyroangle(), false, telemetry, 0.3);
+                        sleep(3000);
+                        rb.drive.setThrottle(0);
+                        sleep(1000);
                         rb.drive.setThrottle(0.4);
-                        sleep(1500);
+                        sleep(2000);
                         rb.drive.setThrottle(0);
 
                     } else if (goldPosition == ENUMS.GoldPosition.CENTER) {
 
-                        rb.drive.setThrottle(0.8);
-                        sleep(2000);
+                        rb.drive.setThrottle(0.4);
+                        sleep(3000);
                         rb.drive.setThrottle(0);
 
                     } else if (goldPosition == ENUMS.GoldPosition.RIGHT){
 
-                        rb.drive.setThrottle(0.4);
-                        sleep(1500);
+                        rb.drive.adjustHeadingRelative(25, true);
+                        sleep(3000);
                         rb.drive.setThrottle(0);
-                        rb.drive.adjustHeadingRelative(90, true);
-                        sleep(4000);
-                        rb.drive.setThrottle(0.4);
-                        sleep(1500);
+
+                        sleep(500);
+
+                        rb.drive.safeStrafe((float) rb.drive.getGyroangle(), true, telemetry, 0.3);
+                        sleep(3000);
                         rb.drive.setThrottle(0);
+                        sleep(1000);
+                        rb.drive.setThrottle(0.4);
+                        sleep(2000);
+                        rb.drive.setThrottle(0);
+
+                        robo = ENUMS.AutoStates.FINDWALLFORDEPOT;
+                        telemetry.update();
 
                     } else if (goldPosition == ENUMS.GoldPosition.UNKNOWN){
 
-                        //hit the one it is most likely to miss (after some testing)
+                        goldPosition = goldPosMissedMostOften;
+
+                        //maybe check again?
 
                     }
 
                     //rb.mineralSystem.runIntake(0);
+
+                    if(goldFound) {
+                        robo = ENUMS.AutoStates.FINDWALLFORDEPOT;
+                        telemetry.update();
+                    }
+
+                    telemetry.update();
+                    break;
+                }
+
+                case FINDWALLFORDEPOT:{
+
+                    rb.drive.adjustHeadingRelative(25, true);
+                    sleep(3000);
+                    rb.drive.setThrottle(0);
+                    sleep(200);
+                    rb.drive.setThrottle(0.4);
+                    sleep(1500);
+                    rb.drive.setThrottle(0);
 
                     robo = ENUMS.AutoStates.DROPTM;
                     break;
@@ -294,8 +390,10 @@ public class Depot extends LinearOpMode {
                     sleep(200);
                     rb.tm.setTMDown();
                     sleep(100);
-                    rb.drive.setThrottle(-0.8);
-                    sleep(1000);
+                    rb.drive.setThrottle(-8);
+                    sleep(500);
+                    rb.tm.setTMUp();
+                    sleep(500);
                     rb.drive.setThrottle(0);
 
                     robo = ENUMS.AutoStates.FINDCRATER;
@@ -305,6 +403,13 @@ public class Depot extends LinearOpMode {
 
                 case FINDCRATER:{
 
+                    rb.drive.setThrottle(-0.8);
+                    sleep(3500);
+                    rb.drive.setThrottle(0);
+
+                    robo = ENUMS.AutoStates.END;
+                    telemetry.update();
+                    break;
                 }
 
                 case END: {
@@ -312,8 +417,10 @@ public class Depot extends LinearOpMode {
                 }
             }
 
-            telemetry.addData("IsAligned", detector.getAligned()); // Is the bot aligned with the gold mineral
-            telemetry.addData("X Pos", detector.getXPosition()); // Gold X pos.
+            telemetry.addData("step", robo);
+            telemetry.addData("current angle", rb.drive.getGyroangle());
+            telemetry.addData("gold pos", goldPosition);
+            telemetry.addData("gold?", goldFound);
             telemetry.update();
 
             idle();

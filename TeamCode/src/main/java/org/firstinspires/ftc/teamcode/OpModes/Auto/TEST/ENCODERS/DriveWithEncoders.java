@@ -16,7 +16,7 @@ public class DriveWithEncoders extends LinearOpMode {
 
         Robot robot = new Robot();
 
-        robot.init(hardwareMap, telemetry, DriveTrain.DriveTypes.TANK);
+        robot.init(hardwareMap, telemetry, DriveTrain.DriveTypes.TANK, true);
 
         robot.drive.kill();
 

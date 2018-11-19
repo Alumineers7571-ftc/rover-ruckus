@@ -17,7 +17,7 @@ public class DepotTeamMarkerOnly extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
 
-        rb.init(hardwareMap, telemetry, DriveTrain.DriveTypes.MECANUM);
+        rb.init(hardwareMap, telemetry, DriveTrain.DriveTypes.MECANUM, true);
 
         rb.tm.setTMUp();
 

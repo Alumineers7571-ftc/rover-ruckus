@@ -19,13 +19,13 @@ public class Robot{
 
     }
 
-    public void init(HardwareMap hardwareMap, Telemetry telemetry, DriveTrain.DriveTypes type){
-        this.initialize(hardwareMap, telemetry, type);
+    public void init(HardwareMap hardwareMap, Telemetry telemetry, DriveTrain.DriveTypes type, boolean isAuto){
+        this.initialize(hardwareMap, telemetry, type, isAuto);
     }
 
-    private void initialize(HardwareMap hardwareMap, Telemetry telemetry, DriveTrain.DriveTypes type) {
+    private void initialize(HardwareMap hardwareMap, Telemetry telemetry, DriveTrain.DriveTypes type, boolean isAuto) {
 
-        drive.init(hardwareMap, telemetry, type);
+        drive.init(hardwareMap, telemetry, type, isAuto);
         mineralSystem.init(hardwareMap, telemetry);
         //gyro.init(hardwareMap,telemetry);
         inputManager.init(hardwareMap, telemetry);

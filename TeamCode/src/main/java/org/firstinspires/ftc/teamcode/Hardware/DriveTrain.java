@@ -15,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Control.Math7571;
+import org.firstinspires.ftc.teamcode.Control.PIDController;
 
 import java.util.Locale;
 
@@ -41,6 +42,9 @@ public class DriveTrain extends BaseHardware {
 
     DriveTypes driveType;
 
+    BNO055IMU.Parameters parameters;
+
+
     Math7571 mathEngine = new Math7571();
 
     boolean trSetUp = false;
@@ -49,19 +53,24 @@ public class DriveTrain extends BaseHardware {
 
     public DcMotor FL, FR, BL, BR;
 
-    private BNO055IMU imu;
+    public BNO055IMU imu;
+
+    Orientation lastAngles = new Orientation();
+    double globalAngle, power = .3, correction;
+
+    PIDController pidRotate;
 
     public Orientation angles;
 
     private double gyroangle, startingValue;
 
-    public void init(HardwareMap hardwareMap, Telemetry telemetry, DriveTypes type){
-        this.initialize(hardwareMap, type, telemetry);
+    public void init(HardwareMap hardwareMap, Telemetry telemetry, DriveTypes type, boolean isAuto){
+        this.initialize(hardwareMap, type, telemetry, isAuto);
     }
 
 //----------------------------------------------------------------------------------------
 
-    private void initialize(HardwareMap hardwareMap, DriveTypes type, Telemetry telemetry){
+    private void initialize(HardwareMap hardwareMap, DriveTypes type, Telemetry telemetry, boolean isAuto){
 
         driveType = type;
 
@@ -75,8 +84,8 @@ public class DriveTrain extends BaseHardware {
         BL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        FR.setDirection(DcMotorSimple.Direction.REVERSE);
-        BR.setDirection(DcMotorSimple.Direction.REVERSE);
+        FL.setDirection(DcMotorSimple.Direction.REVERSE);
+        BL.setDirection(DcMotorSimple.Direction.REVERSE);
 
         switch (driveType) {
             case MECANUM: {
@@ -89,22 +98,33 @@ public class DriveTrain extends BaseHardware {
             }
         }
 
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
-        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
-        // and named "imu".
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        if (isAuto) {
+            BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
-        startingValue = getGyroangle();
+            parameters.mode = BNO055IMU.SensorMode.IMU;
+            parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+            parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+            parameters.loggingEnabled = false;
 
-        imu.initialize(parameters);
+            // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
+            // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
+            // and named "imu".
+            imu = hardwareMap.get(BNO055IMU.class, "imu");
 
+            imu.initialize(parameters);
+
+            pidRotate = new PIDController(.002, 0, 0);
+
+            telemetry.addData("Mode", "calibrating...");
+            telemetry.update();
+
+
+            while (!imu.isGyroCalibrated()) {
+            }
+
+
+
+        }
         telemetry.addLine("DT & GYRO GOOD");
         telemetry.update();
 
@@ -126,8 +146,8 @@ public class DriveTrain extends BaseHardware {
 
     public void strafe(double power){
 
-        //power > 0 = right
-        //power < 0 = left
+        //power < 0 = right
+        //power > 0 = left
 
         FL.setPower(-power);
         FR.setPower(power);
@@ -323,6 +343,8 @@ public class DriveTrain extends BaseHardware {
 
     }*/
 
+
+
     public void adjustHeading(int targetHeading, boolean slow) {
 
         //CREDIT TO 0207!!
@@ -442,6 +464,10 @@ public class DriveTrain extends BaseHardware {
         }
         telemetry.addData("leftPower", leftPower);
         telemetry.addData("rightPower", rightPower);
+    }
+
+    public void initGyro(){
+        imu.initialize(parameters);
     }
 
     public void moveEncoder(int inchesLeft, int inchesRight, double speed){

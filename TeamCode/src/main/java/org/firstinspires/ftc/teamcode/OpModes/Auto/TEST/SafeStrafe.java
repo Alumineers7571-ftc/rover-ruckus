@@ -15,19 +15,22 @@ public class SafeStrafe extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException {
 
-        rb.init(hardwareMap, telemetry, DriveTrain.DriveTypes.MECANUM);
+        rb.init(hardwareMap, telemetry, DriveTrain.DriveTypes.MECANUM, true);
+
+        while(!isStarted()){
+
+            telemetry.addData("angle", rb.drive.getGyroangle());
+            telemetry.update();
+
+        }
+
+        float startingGyroAngle = (float)rb.drive.getGyroangle();
 
         waitForStart();
 
-        rb.drive.adjustHeading(90, true);
-
-        while(opModeIsActive() && !isStopRequested()) {
-
-            rb.drive.safeStrafe(90, true, telemetry, 0.5);
-
-            idle();
-
-        }
+        rb.drive.safeStrafe(startingGyroAngle, true, telemetry, 0.3);
+        sleep(3000);
+        rb.drive.setThrottle(0);
     }
 
 }

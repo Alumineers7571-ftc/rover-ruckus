@@ -135,7 +135,7 @@ public class InputManager extends BaseHardware {
 
     private void initialize(HardwareMap hardwareMap, Telemetry telemetry){
 
-        dt.init(hardwareMap, telemetry, DriveTrain.DriveTypes.TANK);
+        dt.init(hardwareMap, telemetry, DriveTrain.DriveTypes.TANK, false);
 
 
     }

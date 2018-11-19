@@ -15,7 +15,7 @@ public class TeleBOP extends OpMode {
     @Override
     public void init() {
 
-        robot.init(hardwareMap, telemetry, DriveTrain.DriveTypes.TANK);
+        robot.init(hardwareMap, telemetry, DriveTrain.DriveTypes.TANK, false);
 
     }
 

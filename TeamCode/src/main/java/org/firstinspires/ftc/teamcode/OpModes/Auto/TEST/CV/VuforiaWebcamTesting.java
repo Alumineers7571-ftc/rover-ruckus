@@ -35,6 +35,7 @@ import com.disnodeteam.dogecv.Dogeforia;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
 import com.disnodeteam.dogecv.filters.LeviColorFilter;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -73,8 +74,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Vuforia Webcam Testing", group="DogeCV")
-@Disabled
+@Autonomous(name="Vuforia Webcam Testing", group="DogeCV")
 public class VuforiaWebcamTesting extends OpMode
 {
 
@@ -226,6 +226,7 @@ public class VuforiaWebcamTesting extends OpMode
         }
 
 
+        telemetry.addData("gold", detector.isFound());
 
         telemetry.update();
 

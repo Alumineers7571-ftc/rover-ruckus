@@ -12,7 +12,7 @@ public class AutoAlign extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        robot.init(hardwareMap, telemetry, DriveTrain.DriveTypes.MECANUM);
+        robot.init(hardwareMap, telemetry, DriveTrain.DriveTypes.MECANUM, true);
 
         waitForStart();
 

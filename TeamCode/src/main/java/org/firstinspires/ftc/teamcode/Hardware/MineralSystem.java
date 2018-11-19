@@ -20,6 +20,10 @@ public class MineralSystem extends BaseHardware {
 
     private boolean servoSet = false;
 
+    private boolean isIntakeRunning = false;
+    private boolean isHangerRunning = false;
+    private boolean isExtendoRunning = false;
+
     public void init(HardwareMap hardwareMap, Telemetry telemetry){
         this.initialize(hardwareMap, telemetry);
     }
@@ -50,11 +54,19 @@ public class MineralSystem extends BaseHardware {
 
     public void runIntake(double power){
 
+        if (power != 0){
+            isIntakeRunning = true;
+        } else {
+            isIntakeRunning = false;
+        }
+
         //positive power is intaking
         //negative power is outtaking
 
         intakeLeft.setPower(-power);
         intakeRight.setPower(power);
+
+
 
     }
 }

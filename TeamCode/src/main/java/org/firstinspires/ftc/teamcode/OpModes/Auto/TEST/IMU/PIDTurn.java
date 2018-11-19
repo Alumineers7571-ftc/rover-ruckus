@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.Auto.TEST.ENCODERS;
+package org.firstinspires.ftc.teamcode.OpModes.Auto.TEST.IMU;
 // Simple autonomous program that drives bot forward until end of period
 // or touch sensor is hit. If touched, backs up a bit and turns 90 degrees
 // right and keeps going. Demonstrates obstacle avoidance and use of the
@@ -25,17 +25,16 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Control.PIDController;
 import org.firstinspires.ftc.teamcode.Hardware.DriveTrain;
 
-@Autonomous(name="Drive Avoid PID", group="PID")
-public class DriveAvoidPid extends LinearOpMode {
+@Autonomous(name="Turn", group="PID")
+public class PIDTurn extends LinearOpMode {
 
     DriveTrain dt = new DriveTrain();
 
-    DigitalChannel touch;
     BNO055IMU imu;
     Orientation lastAngles = new Orientation();
-    double globalAngle, power = .3, correction;
-    boolean aButton, bButton, touched;
-    PIDController pidRotate, pidDrive;
+    double globalAngle, power = .65, correction;
+
+    PIDController pidRotate;
 
     // called when init button is  pressed.
     @Override
@@ -57,12 +56,9 @@ public class DriveAvoidPid extends LinearOpMode {
 
         imu.initialize(parameters);
 
-        // Set PID proportional value to start reducing power at about 50 degrees of rotation.
-        pidRotate = new PIDController(.005, 0, 0);
+        // Set PID proportional value to start reducing power at about 20 degrees of rotation.
+        pidRotate = new PIDController(.002, 0, 0);
 
-        // Set PID proportional value to produce non-zero correction value when robot veers off
-        // straight line. P value controls how sensitive the correction is.
-        pidDrive = new PIDController(.05, 0, 0);
 
         telemetry.addData("Mode", "calibrating...");
         telemetry.update();
@@ -86,14 +82,6 @@ public class DriveAvoidPid extends LinearOpMode {
 
         sleep(1000);
 
-        // Set up parameters for driving in a straight line.
-        pidDrive.setSetpoint(0);
-        pidDrive.setOutputRange(0, power);
-        pidDrive.setInputRange(-90, 90);
-        pidDrive.enable();
-
-        // drive until end of period.
-
         while (opModeIsActive()) {
             // Use PID with imu input to drive in a straight line.
             //correction = pidDrive.performPID(getAngle());
@@ -104,7 +92,10 @@ public class DriveAvoidPid extends LinearOpMode {
             telemetry.addData("4 powers", power);
             telemetry.update();
 
-            rotate(90, 0.3);
+            rotate(30, power);
+            sleep(3000);
+            rotate(-30, power);
+            sleep(3000);
 
         }
 

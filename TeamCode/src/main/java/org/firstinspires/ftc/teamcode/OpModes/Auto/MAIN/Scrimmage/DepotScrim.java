@@ -73,7 +73,7 @@ public class DepotScrim extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        rb.init(hardwareMap, telemetry, DriveTrain.DriveTypes.TANK);
+        rb.init(hardwareMap, telemetry, DriveTrain.DriveTypes.TANK, true);
 
         webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
 

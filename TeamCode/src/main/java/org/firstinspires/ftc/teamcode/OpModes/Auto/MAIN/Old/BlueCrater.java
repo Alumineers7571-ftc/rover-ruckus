@@ -35,7 +35,7 @@ public class BlueCrater extends LinearOpMode {
     @Override
     public void runOpMode(){
 
-        robot.init(hardwareMap, telemetry, DriveTrain.DriveTypes.TANK);
+        robot.init(hardwareMap, telemetry, DriveTrain.DriveTypes.TANK, true);
 
         detector = new SamplingOrderDetector();
         detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());

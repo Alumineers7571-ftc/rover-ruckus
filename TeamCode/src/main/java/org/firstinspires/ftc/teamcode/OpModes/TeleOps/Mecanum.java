@@ -15,7 +15,7 @@ public class Mecanum extends OpMode{
     @Override
     public void init() {
 
-        robot.init(hardwareMap, telemetry, DriveTrain.DriveTypes.MECANUM);
+        robot.init(hardwareMap, telemetry, DriveTrain.DriveTypes.MECANUM, false);
 
     }
 
