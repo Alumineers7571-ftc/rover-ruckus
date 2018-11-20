@@ -345,9 +345,8 @@ public class Depot extends LinearOpMode {
                         rotate(-30, power);
 
                         sleep(500);
-
                         rb.drive.strafe(0.5);
-                        sleep(1500);
+                        sleep(1000);
                         rb.drive.setThrottle(0);
                         sleep(300);
                         rb.drive.setThrottle(0.4);
@@ -369,7 +368,7 @@ public class Depot extends LinearOpMode {
                         sleep(500);
 
                         rb.drive.strafe(-0.5);
-                        sleep(1500);
+                        sleep(1000);
                         rb.drive.setThrottle(0);
                         sleep(300);
                         rb.drive.setThrottle(0.4);
@@ -401,17 +400,22 @@ public class Depot extends LinearOpMode {
                 case FINDWALLFORDEPOT:{
 
                     if(goldPosition == ENUMS.GoldPosition.RIGHT) {
-                        rotate(35, power);
+                        rotate(40, power);
+                        sleep(200);
+                        rb.drive.strafe(-0.5);
+                        sleep(1000);
+                        rb.drive.setThrottle(0);
                     } else if (goldPosition == ENUMS.GoldPosition.LEFT) {
-                        rotate(-35, power);
+                        rotate(-40, power);
+                        sleep(200);
+                        rb.drive.strafe(0.5);
+                        sleep(2000);
+                        rb.drive.setThrottle(0);
                     }
-                    sleep(200);
-                    rb.drive.strafe(-0.5);
-                    sleep(1000);
-                    rb.drive.setThrottle(0);
+
                     sleep(300);
-                    rb.drive.setThrottle(0.4);
-                    sleep(1000);
+                    rb.drive.setThrottle(0.6);
+                    sleep(1500);
                     rb.drive.setThrottle(0);
 
                     robo = ENUMS.AutoStates.DROPTM;
@@ -422,11 +426,10 @@ public class Depot extends LinearOpMode {
 
                     sleep(200);
                     rb.tm.setTMDown();
-                    sleep(100);
+                    sleep(300);
                     rb.drive.setThrottle(-8);
-                    sleep(500);
+                    sleep(1000);
                     rb.tm.setTMUp();
-
                     robo = ENUMS.AutoStates.FINDCRATER;
                     break;
 
@@ -434,7 +437,7 @@ public class Depot extends LinearOpMode {
 
                 case FINDCRATER:{
 
-                    sleep(4000);
+                    sleep(750);
                     rb.drive.setThrottle(0);
 
                     robo = ENUMS.AutoStates.END;
