@@ -28,7 +28,7 @@ public class SafeStrafe extends LinearOpMode{
 
         waitForStart();
 
-        rb.drive.safeStrafe(startingGyroAngle, true, telemetry, 0.3);
+        rb.drive.safeStrafe(startingGyroAngle, true, telemetry, 0.3, null);
         sleep(3000);
         rb.drive.setThrottle(0);
     }
