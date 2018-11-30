@@ -248,8 +248,8 @@ public class Depot extends LinearOpMode {
 
                 case START: {
 
-                    rb.drive.setThrottle(0.4);
-                    sleep(1000);
+                    rb.drive.moveEncoder(19,19, 0.5);
+                    while(rb.drive.motorsBusy()){}
                     rb.drive.setThrottle(0);
 
                     sleep(500);
