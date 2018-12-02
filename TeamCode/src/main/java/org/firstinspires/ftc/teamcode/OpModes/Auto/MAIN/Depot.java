@@ -84,9 +84,9 @@ public class Depot extends LinearOpMode {
     double globalAngle, power = .6, correction;
 
     int startingAngle = 0;
-    
+
     PIDController pidRotate;
-    
+
     @Override
     public void runOpMode() {
 
@@ -116,7 +116,7 @@ public class Depot extends LinearOpMode {
 
 
         pidRotate = new PIDController(.002, 0, 0);
-        
+
         webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -237,7 +237,7 @@ public class Depot extends LinearOpMode {
             telemetry.addData("turnPower ", power);
             telemetry.addData("gold", detector.isFound());
             telemetry.addData("robo", robo);
-            telemetry.addData("cangle", getAngle());
+            //telemetry.addData("cangle", getAngle());
             telemetry.update();
 
             sleep(1000);
@@ -274,14 +274,21 @@ public class Depot extends LinearOpMode {
                     }
 
                     rb.drive.strafe(0.3);
-                    sleep(1000);
+                    sleep(750);
                     rb.drive.setThrottle(0);
                     sleep(100);
-                    rb.drive.encoderDrive(0.4, 2, 2, opModeIsActive());
+                    rb.drive.setThrottle(0.8);
+                    sleep(250);
+                    rb.drive.setThrottle(0);
                     sleep(100);
                     rb.drive.strafe(-0.3);
-                    sleep(1000);
+                    sleep(750);
                     rb.drive.setThrottle(0);
+
+                    while(opModeIsActive() && !rb.hanger.moveToLowerLimit()){
+                        telemetry.addData("Touched: ", rb.hanger.isTouched());
+                        telemetry.update();
+                    }
 
                     robo = ENUMS.AutoStates.MOVETOSAMPLE;
                     break;
@@ -290,7 +297,9 @@ public class Depot extends LinearOpMode {
 
                 case MOVETOSAMPLE: {
 
-                    rb.drive.encoderDrive(0.6, 17, 17, opModeIsActive());
+                    rb.drive.setThrottle(0.6);
+                    sleep(500);
+                    rb.drive.setThrottle(0);
 
                     sleep(500);
 
@@ -375,7 +384,7 @@ public class Depot extends LinearOpMode {
 
                         sleep(500);
                         rb.drive.strafe(0.5);
-                        sleep(1000);
+                        sleep(1500);
                         rb.drive.setThrottle(0);
                         sleep(300);
                         rb.drive.setThrottle(0.4);
@@ -388,6 +397,7 @@ public class Depot extends LinearOpMode {
                         sleep(3000);
                         rb.drive.setThrottle(0);
 
+
                     } else if (goldPosition == ENUMS.GoldPosition.RIGHT){
 
                         float targetPos = (float) getAngle();
@@ -397,7 +407,7 @@ public class Depot extends LinearOpMode {
                         sleep(500);
 
                         rb.drive.strafe(-0.5);
-                        sleep(1000);
+                        sleep(1500);
                         rb.drive.setThrottle(0);
                         sleep(300);
                         rb.drive.setThrottle(0.4);
@@ -429,23 +439,36 @@ public class Depot extends LinearOpMode {
                 case FINDWALLFORDEPOT:{
 
                     if(goldPosition == ENUMS.GoldPosition.RIGHT) {
+
                         rotate(40, power);
                         sleep(200);
                         rb.drive.strafe(-0.5);
-                        sleep(1000);
+                        sleep(2000);
                         rb.drive.setThrottle(0);
+                        sleep(300);
+                        rb.drive.setThrottle(0.6);
+                        sleep(1500);
+                        rb.drive.setThrottle(0);
+
                     } else if (goldPosition == ENUMS.GoldPosition.LEFT) {
+
                         rotate(-40, power);
                         sleep(200);
                         rb.drive.strafe(0.5);
                         sleep(2000);
                         rb.drive.setThrottle(0);
+                        sleep(300);
+                        rb.drive.setThrottle(0.6);
+                        sleep(1500);
+                        rb.drive.setThrottle(0);
+
+                    } else if (goldPosition == ENUMS.GoldPosition.CENTER){
+                        rotate(30, power);
+                        rb.drive.strafe(-0.5);
+                        sleep(2500);
+                        rb.drive.setThrottle(0);
                     }
 
-                    sleep(300);
-                    rb.drive.setThrottle(0.6);
-                    sleep(1500);
-                    rb.drive.setThrottle(0);
 
                     robo = ENUMS.AutoStates.DROPTM;
                     break;
@@ -480,7 +503,7 @@ public class Depot extends LinearOpMode {
             }
 
             telemetry.addData("step", robo);
-            telemetry.addData("current angle", getAngle());
+            //telemetry.addData("current angle", getAngle());
             telemetry.addData("gold pos", goldPosition);
             telemetry.addData("gold?", goldFound);
             telemetry.update();
@@ -578,5 +601,5 @@ public class Depot extends LinearOpMode {
         // reset angle tracking on new heading.
         resetAngle();
     }
-    
+
 }

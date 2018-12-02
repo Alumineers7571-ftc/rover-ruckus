@@ -1,10 +1,13 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
+import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -15,7 +18,9 @@ public class Hanger{
 
     DistanceSensor distanceSensor;
 
-    final double SENSOR_IN_FROM_GROUND = 1;
+    DigitalChannel digitalTouch;  // Hardware Device Object
+
+    final double SENSOR_IN_FROM_GROUND = 2.1468785541058;
 
     public Hanger(){
     }
@@ -32,6 +37,11 @@ public class Hanger{
 
         distanceSensor = hardwareMap.get(DistanceSensor.class, "range");
 
+        digitalTouch = hardwareMap.get(DigitalChannel.class, "sensor_digital");
+
+        // set the digital channel to input.
+        digitalTouch.setMode(DigitalChannel.Mode.INPUT);
+
         double startingDistanceIn = distanceSensor.getDistance(DistanceUnit.INCH);
         boolean scored = false;
 
@@ -42,7 +52,14 @@ public class Hanger{
         }
 
         telemetry.addData("4+ ?: ", scored);
+        telemetry.addData("Distance: ", distanceSensor.getDistance(DistanceUnit.INCH));
+        telemetry.update();
 
+    }
+
+    public double getDistanceToGround(DistanceUnit unit){
+
+        return distanceSensor.getDistance(unit);
     }
 
     public void controlHanger(Gamepad gamepad){
@@ -59,19 +76,38 @@ public class Hanger{
 
     public boolean moveToGround(){
 
-        if((distanceSensor.getDistance(DistanceUnit.INCH) > (0 + SENSOR_IN_FROM_GROUND))){
+        if(distanceSensor.getDistance(DistanceUnit.INCH) < (SENSOR_IN_FROM_GROUND)){
 
             hanger.setPower(0);
             return true;
 
         } else {
 
-            hanger.setPower(0.3);
+            hanger.setPower(0.8);
             return false;
 
         }
 
 
+    }
+
+    public boolean moveToLowerLimit(){
+
+        if(isTouched()){
+
+            hanger.setPower(0);
+            return true;
+
+        } else {
+
+            hanger.setPower(-1);
+            return false;
+
+        }
+    }
+
+    public boolean isTouched(){
+        return !digitalTouch.getState();
     }
 
 

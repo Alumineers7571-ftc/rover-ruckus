@@ -59,7 +59,7 @@ public class InputReplayer extends OpMode{
         countLines = 0;
         countReplays = 0;
 
-        dt.init(hardwareMap, telemetry);
+        //dt.init(hardwareMap, telemetry);
 
         leftPowerValues = new double[1500];
         rightPowerValues = new double[1500];

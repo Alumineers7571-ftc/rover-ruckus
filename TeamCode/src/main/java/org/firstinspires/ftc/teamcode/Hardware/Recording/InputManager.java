@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Hardware.util.BaseHardware;
 import org.firstinspires.ftc.teamcode.Hardware.DriveTrain;
 
 import java.io.BufferedReader;
@@ -15,7 +14,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class InputManager extends BaseHardware {
+public class InputManager {
 
     public DriveTrain dt = new DriveTrain();
 

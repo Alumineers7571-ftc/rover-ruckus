@@ -14,11 +14,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Control.Math7571;
 import org.firstinspires.ftc.teamcode.Control.PIDController;
-import org.firstinspires.ftc.teamcode.Hardware.util.BaseHardware;
 
 import java.util.Locale;
 
-public class DriveTrain extends BaseHardware {
+public class DriveTrain {
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP

@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.OpModes.Auto.MAIN;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Hardware.DriveTrain;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 
+@Autonomous(name = "DepotSHell")
 public class DepotShell extends LinearOpMode{
 
     Robot rb = new Robot();
