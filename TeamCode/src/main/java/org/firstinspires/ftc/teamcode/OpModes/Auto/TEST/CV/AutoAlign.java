@@ -16,9 +16,7 @@ public class AutoAlign extends LinearOpMode {
 
         waitForStart();
 
-        while(opModeIsActive() && !robot.computerVision.isAligned()){
-            robot.drive.strafe(0.3);
-        }
+
 
     }
 }

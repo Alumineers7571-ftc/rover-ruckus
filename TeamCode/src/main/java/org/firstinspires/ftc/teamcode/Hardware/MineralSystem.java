@@ -4,13 +4,13 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Hardware.util.BaseHardware;
 
 public class MineralSystem extends BaseHardware {
 
-    DcMotor extendo, hanger;
+    DcMotor extendo;
 
     CRServo intakeLeft, intakeRight;
 
@@ -30,7 +30,6 @@ public class MineralSystem extends BaseHardware {
 
     private void initialize(HardwareMap hardwareMap, Telemetry telemetry){
 
-        hanger = hardwareMap.dcMotor.get("hanger");
         extendo = hardwareMap.dcMotor.get("extendo");
 
         intakeLeft = hardwareMap.crservo.get("intakeL");
@@ -44,7 +43,6 @@ public class MineralSystem extends BaseHardware {
 
 
         extendo.setPower(gamepad.right_stick_y);
-        hanger.setPower(gamepad.left_stick_y);
 
         intakeLeft.setPower(-(gamepad.left_trigger - gamepad.right_trigger));
         intakeRight.setPower((gamepad.left_trigger - gamepad.right_trigger));

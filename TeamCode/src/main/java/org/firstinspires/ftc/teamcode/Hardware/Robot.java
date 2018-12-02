@@ -9,10 +9,9 @@ public class Robot{
 
     public DriveTrain drive = new DriveTrain();
     public MineralSystem mineralSystem = new MineralSystem();
-    //public Gyro gyro = new Gyro();
+    public Hanger hanger = new Hanger();
     public InputManager inputManager = new InputManager();
     public TeamMarkerer tm = new TeamMarkerer();
-    public ComputerVision computerVision = new ComputerVision();
 
 
     public Robot() {
@@ -27,10 +26,9 @@ public class Robot{
 
         drive.init(hardwareMap, telemetry, type, isAuto);
         mineralSystem.init(hardwareMap, telemetry);
-        //gyro.init(hardwareMap,telemetry);
+        hanger.init(hardwareMap, telemetry);
         inputManager.init(hardwareMap, telemetry);
         tm.init(hardwareMap, telemetry);
-        //computerVision.init(hardwareMap);
 
 
     }

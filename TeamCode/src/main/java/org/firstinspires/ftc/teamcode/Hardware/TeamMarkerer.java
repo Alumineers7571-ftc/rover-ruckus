@@ -4,8 +4,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Hardware.util.BaseHardware;
 
-public class TeamMarkerer extends BaseHardware{
+public class TeamMarkerer extends BaseHardware {
 
     Servo teamMarkerer;
 

@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -16,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Control.Math7571;
 import org.firstinspires.ftc.teamcode.Control.PIDController;
+import org.firstinspires.ftc.teamcode.Hardware.util.BaseHardware;
 
 import java.util.Locale;
 
@@ -43,7 +42,6 @@ public class DriveTrain extends BaseHardware {
     DriveTypes driveType;
 
     BNO055IMU.Parameters parameters;
-
 
     Math7571 mathEngine = new Math7571();
 
@@ -99,6 +97,7 @@ public class DriveTrain extends BaseHardware {
         }
 
         if (isAuto) {
+
             BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
             parameters.mode = BNO055IMU.SensorMode.IMU;
@@ -111,23 +110,17 @@ public class DriveTrain extends BaseHardware {
             // and named "imu".
             imu = hardwareMap.get(BNO055IMU.class, "imu");
 
-            imu.initialize(parameters);
-
-            pidRotate = new PIDController(.002, 0, 0);
-
-            telemetry.addData("Mode", "calibrating...");
-            telemetry.update();
-
-
-            while (!imu.isGyroCalibrated()) {
-            }
-
-
 
         }
         telemetry.addLine("DT & GYRO GOOD");
         telemetry.update();
 
+
+    }
+
+    public void initIMU(){
+
+        imu.initialize(parameters);
 
     }
 
@@ -285,66 +278,6 @@ public class DriveTrain extends BaseHardware {
         }
     }
 
-/*
-    public void turnAbsoulte(double target, double heading){
-
-        double Error = heading - target;
-        double Kp = 0.015;
-        double leftPower;
-        double rightPower;
-
-        if ((Math.abs(Error)) > 2 ){
-            leftPower = Error * Kp;
-            rightPower = -Error * Kp;
-            leftPower = Range.clip(leftPower,-1,1);
-            rightPower = Range.clip(rightPower,-1,1);
-
-            FL.setPower(leftPower);
-            FR.setPower(rightPower);
-            BL.setPower(leftPower);
-            BR.setPower(rightPower);
-        }
-        else {
-            FL.setPower(0);
-            FR.setPower(0);
-            BL.setPower(0);
-            BR.setPower(0);
-        }
-
-    }
-
-    public boolean turnRelative(double angle, double tolerence, LinearOpMode opMode) {
-
-            if (!trSetUp) {
-
-                wrappedAngle = mathEngine.wrapAround((int) (angle + getGyroangle()), -180, 180);
-                trSetUp = true;
-
-            }
-
-
-            currentAngle = getGyroangle();
-
-            turnAbsoulte(wrappedAngle, currentAngle);
-
-            if ((currentAngle >= wrappedAngle-tolerence) && (currentAngle <= wrappedAngle+tolerence)) {
-                setThrottle(0);
-                wrappedAngle = 0;
-                trSetUp = false;
-                return false;
-            }
-
-            opMode.telemetry.addLine("angle: " + currentAngle);
-            opMode.telemetry.addLine("wrapped: " + wrappedAngle);
-            opMode.telemetry.addLine("setUp: " + trSetUp);
-            opMode.telemetry.update();
-
-            return true;
-
-    }*/
-
-
-
     public void adjustHeading(int targetHeading, boolean slow) {
 
         //CREDIT TO 0207!!
@@ -494,21 +427,22 @@ public class DriveTrain extends BaseHardware {
     }
 
     public void encoderDrive(double speed,
-                             double leftInches, double rightInches,
-                             double timeoutS, boolean opModeIsActive) {
-        int newLeftTarget;
-        int newRightTarget;
+                             double leftInches, double rightInches, boolean opModeIsActive) {
+        int newFLTarget, newFRTarget, newBLTarget, newBRTarget;
 
         // Ensure that the opmode is still active
         if (opModeIsActive) {
 
             // Determine new target position, and pass to motor controller
-            newLeftTarget = robot.leftDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = robot.rightDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            FL.setTargetPosition(newLeftTarget);
-            BL.setTargetPosition(newLeftTarget);
-            FR.setTargetPosition(newRightTarget);
-            BR.setTargetPosition(newRightTarget);
+            newFLTarget = FL.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newBLTarget = BL.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newFRTarget = FR.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newBRTarget = BR.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+
+            FL.setTargetPosition(newFLTarget);
+            BL.setTargetPosition(newBLTarget);
+            FR.setTargetPosition(newFRTarget);
+            BR.setTargetPosition(newBRTarget);
 
             // Turn On RUN_TO_POSITION
             setMotorModes(DcMotor.RunMode.RUN_TO_POSITION);
@@ -521,11 +455,11 @@ public class DriveTrain extends BaseHardware {
             // always end the motion as soon as possible.
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
-            while (opModeIsActive) &&
-                    (robot.leftDrive.isBusy() && robot.rightDrive.isBusy())) {
+            while (opModeIsActive &&
+                    (motorsBusy())) {
 
                 // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
+                telemetry.addData("Path1",  "Running to %7d :%7d", newFLTarget,  newFRTarget);
                 telemetry.addData("Path2",  "Running at %7d :%7d",
                         FL.getCurrentPosition(),
                         FR.getCurrentPosition());
@@ -597,6 +531,11 @@ public class DriveTrain extends BaseHardware {
 
     public boolean isCalib(){
         return imu.isGyroCalibrated();
+    }
+
+    public Orientation getIMUOrientation(){
+
+        return imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
     }
 
 }

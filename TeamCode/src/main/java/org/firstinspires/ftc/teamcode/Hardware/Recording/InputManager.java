@@ -1,13 +1,11 @@
 package org.firstinspires.ftc.teamcode.Hardware.Recording;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Hardware.BaseHardware;
+import org.firstinspires.ftc.teamcode.Hardware.util.BaseHardware;
 import org.firstinspires.ftc.teamcode.Hardware.DriveTrain;
 
 import java.io.BufferedReader;

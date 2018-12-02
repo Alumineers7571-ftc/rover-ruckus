@@ -1,15 +1,12 @@
 package org.firstinspires.ftc.teamcode.OpModes.Auto.MAIN;
 
 
-import android.content.Context;
-
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.Dogeforia;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -26,7 +23,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.Control.ENUMS;
 import org.firstinspires.ftc.teamcode.Control.PIDController;
 import org.firstinspires.ftc.teamcode.Hardware.DriveTrain;
-import org.firstinspires.ftc.teamcode.Hardware.Gyro;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 
 import java.util.ArrayList;
@@ -85,7 +81,7 @@ public class Depot extends LinearOpMode {
     long delayTime = 0;
 
     Orientation lastAngles = new Orientation();
-    double globalAngle, power = .4, correction;
+    double globalAngle, power = .6, correction;
 
     int startingAngle = 0;
     
@@ -108,7 +104,7 @@ public class Depot extends LinearOpMode {
         // and named "imu".
         imu = hardwareMap.get(BNO055IMU.class, "imu");
 
-        imu.initialize(parameters);
+        //imu.initialize(parameters);
 
         // Set PID proportional value to start reducing power at about 20 degrees of rotation.
         pidRotate = new PIDController(.002, 0, 0);
@@ -117,11 +113,7 @@ public class Depot extends LinearOpMode {
         telemetry.addData("Mode", "calibrating...");
         telemetry.update();
 
-        // make sure the imu gyro is calibrated before continuing.
-        while (!isStopRequested() && !imu.isGyroCalibrated()) {
-            sleep(50);
-            idle();
-        }
+
 
         pidRotate = new PIDController(.002, 0, 0);
         
@@ -224,11 +216,25 @@ public class Depot extends LinearOpMode {
                 }
             }
 
-            if(detector.isFound()){
-                robo = ENUMS.AutoStates.EARLYCENTERGOLD;
+            if(gamepad1.dpad_up){
+                power += 0.1;
+            } else if(gamepad1.dpad_down){
+                power -= 0.1;
+            } else if(gamepad1.dpad_left){
+                power = 0;
+            } else if(gamepad1.dpad_right){
+                power = 0.4;
             }
 
+            /*if(detector.isFound()){
+                detector.disable();
+                goldFound = true;
+                goldPosition = ENUMS.GoldPosition.CENTER;
+                robo = ENUMS.AutoStates.EARLYCENTERGOLD;
+            }*/
+
             telemetry.addData("delayTime", delayTime);
+            telemetry.addData("turnPower ", power);
             telemetry.addData("gold", detector.isFound());
             telemetry.addData("robo", robo);
             telemetry.addData("cangle", getAngle());
@@ -248,26 +254,49 @@ public class Depot extends LinearOpMode {
 
                 case START: {
 
-                    rb.drive.moveEncoder(19,19, 0.5);
-                    while(rb.drive.motorsBusy()){}
+                    robo = ENUMS.AutoStates.DROPDOWN;
+                    break;
+                }
+
+                case DROPDOWN: {
+
+                    while(opModeIsActive() && !rb.hanger.moveToGround()){
+
+                    }
+
+                    sleep(300);
+                    imu.initialize(parameters);
+
+                    // make sure the imu gyro is calibrated before continuing.
+                    while (!isStopRequested() && !imu.isGyroCalibrated()) {
+                        sleep(50);
+                        idle();
+                    }
+
+                    rb.drive.strafe(0.3);
+                    sleep(1000);
                     rb.drive.setThrottle(0);
+                    sleep(100);
+                    rb.drive.encoderDrive(0.4, 2, 2, opModeIsActive());
+                    sleep(100);
+                    rb.drive.strafe(-0.3);
+                    sleep(1000);
+                    rb.drive.setThrottle(0);
+
+                    robo = ENUMS.AutoStates.MOVETOSAMPLE;
+                    break;
+
+                }
+
+                case MOVETOSAMPLE: {
+
+                    rb.drive.encoderDrive(0.6, 17, 17, opModeIsActive());
 
                     sleep(500);
 
-                    if(detector.isFound()) {
+                    rotate(30, power);
 
-                        detector.disable();
-                        goldFound = true;
-                        goldPosition = ENUMS.GoldPosition.CENTER;
-                        robo = ENUMS.AutoStates.HITGOLD;
-
-                    } else {
-
-                        rotate(30, power);
-                        sleep(500);
-
-                        robo = ENUMS.AutoStates.CHECKLEFT;
-                    }
+                    robo = ENUMS.AutoStates.CHECKLEFT;
                     telemetry.update();
                     break;
                 }

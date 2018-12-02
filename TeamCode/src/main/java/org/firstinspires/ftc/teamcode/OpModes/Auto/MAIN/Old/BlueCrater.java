@@ -7,13 +7,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.Control.ENUMS;
 import org.firstinspires.ftc.teamcode.Control.FinalValues;
 import org.firstinspires.ftc.teamcode.Hardware.DriveTrain;
-import org.firstinspires.ftc.teamcode.Hardware.Gyro;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 
 @Autonomous (name = "BlueCrater", group = "MAIN")

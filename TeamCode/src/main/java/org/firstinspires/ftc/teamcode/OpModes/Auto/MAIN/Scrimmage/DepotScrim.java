@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes.Auto.MAIN.Scrimmage;
 
 
-import android.content.Context;
-
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.Dogeforia;
@@ -21,7 +19,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.Control.ENUMS;
 import org.firstinspires.ftc.teamcode.Hardware.DriveTrain;
-import org.firstinspires.ftc.teamcode.Hardware.Gyro;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 
 import java.util.ArrayList;
