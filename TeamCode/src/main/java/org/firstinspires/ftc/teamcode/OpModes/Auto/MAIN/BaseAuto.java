@@ -30,33 +30,43 @@ public class BaseAuto {
 
     public void DropDown(){
 
-        while(opMode.opModeIsActive() && rb.hanger.moveToGround()){
+        while(opMode.opModeIsActive()&& !rb.hanger.moveToGround()){
+
         }
 
+        opMode.sleep(300);
         rb.drive.initIMU();
 
+        // make sure the imu gyro is calibrated before continuing.
         while (!opMode.isStopRequested() && !rb.drive.isCalib()) {
             opMode.sleep(50);
             opMode.idle();
         }
 
-        opMode.sleep(300);
-
         rb.drive.strafe(0.3);
-        opMode.sleep(1000);
+       opMode.sleep(750);
         rb.drive.setThrottle(0);
-        opMode.sleep(100);
-        rb.drive.encoderDrive(0.4, 2, 2, opMode.opModeIsActive());
-        opMode.sleep(100);
+       opMode.sleep(100);
+        rb.drive.setThrottle(0.8);
+       opMode.sleep(250);
+        rb.drive.setThrottle(0);
+       opMode.sleep(100);
         rb.drive.strafe(-0.3);
-        opMode.sleep(1000);
+       opMode.sleep(750);
         rb.drive.setThrottle(0);
+
+        while(opMode.opModeIsActive()&& !rb.hanger.moveToLowerLimit()){
+            opMode.telemetry.addData("Touched: ", rb.hanger.isTouched());
+            opMode.telemetry.update();
+        }
 
     }
 
     public void MoveToSample(){
 
-        rb.drive.encoderDrive(0.6, 17, 17, opMode.opModeIsActive());
+        rb.drive.setThrottle(0.6);
+        opMode.sleep(500);
+        rb.drive.setThrottle(0);
 
         opMode.sleep(500);
 
@@ -135,7 +145,7 @@ public class BaseAuto {
 
         if (degrees < 0) {
             // On right turn we have to get off zero first.
-            while (opMode.opModeIsActive() && getAngle() == 0) {
+            while (opMode.opModeIsActive()&& getAngle() == 0) {
                 rb.drive.runMotorsSides(power, -power);
                 opMode.sleep(100);
             }
@@ -143,12 +153,12 @@ public class BaseAuto {
             do {
                 power = pidRotate.performPID(getAngle()); // power will be - on right turn.
                 rb.drive.runMotorsSides(-power, power);
-            } while (opMode.opModeIsActive() && !pidRotate.onTarget());
+            } while (opMode.opModeIsActive()&& !pidRotate.onTarget());
         } else    // left turn.
             do {
                 power = pidRotate.performPID(getAngle()); // power will be + on left turn.
                 rb.drive.runMotorsSides(-power, power);
-            } while (opMode.opModeIsActive() && !pidRotate.onTarget());
+            } while (opMode.opModeIsActive()&& !pidRotate.onTarget());
 
         // turn the motors off.
         rb.drive.setThrottle(0);
