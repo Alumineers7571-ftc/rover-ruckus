@@ -104,6 +104,30 @@ public class Depot extends LinearOpMode {
         // and named "imu".
         imu = hardwareMap.get(BNO055IMU.class, "imu");
 
+        try {
+            // axis remap
+            //byte AXIS_MAP_CONFIG_BYTE = 0x6; //This is what to write to the AXIS_MAP_CONFIG register to swap x and z axes
+            byte AXIS_MAP_SIGN_BYTE = 0x1; //This is what to write to the AXIS_MAP_SIGN register to negate the z axis
+
+            //Need to be in CONFIG mode to write to registers
+            imu.write8(BNO055IMU.Register.OPR_MODE, BNO055IMU.SensorMode.CONFIG.bVal & 0x0F);
+
+            Thread.sleep(100); //Changing modes requires a delay before doing anything else
+
+            //Write to the AXIS_MAP_CONFIG register
+            //imu.write8(BNO055IMU.Register.AXIS_MAP_CONFIG, AXIS_MAP_CONFIG_BYTE & 0x0F);
+
+            //Write to the AXIS_MAP_SIGN register
+            imu.write8(BNO055IMU.Register.AXIS_MAP_SIGN, AXIS_MAP_SIGN_BYTE & 0x0F);
+
+            //Need to change back into the IMU mode to use the gyro
+            imu.write8(BNO055IMU.Register.OPR_MODE, BNO055IMU.SensorMode.IMU.bVal & 0x0F);
+
+            Thread.sleep(100); //Changing modes again requires a delay
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
         //imu.initialize(parameters);
 
         // Set PID proportional value to start reducing power at about 20 degrees of rotation.
@@ -265,19 +289,12 @@ public class Depot extends LinearOpMode {
                     }
 
                     sleep(300);
-                    imu.initialize(parameters);
-
-                    // make sure the imu gyro is calibrated before continuing.
-                    while (!isStopRequested() && !imu.isGyroCalibrated()) {
-                        sleep(50);
-                        idle();
-                    }
 
                     rb.drive.strafe(0.3);
                     sleep(750);
                     rb.drive.setThrottle(0);
                     sleep(100);
-                    rb.drive.setThrottle(0.8);
+                    rb.drive.setThrottle(0.6);
                     sleep(250);
                     rb.drive.setThrottle(0);
                     sleep(100);
@@ -288,6 +305,19 @@ public class Depot extends LinearOpMode {
                     while(opModeIsActive() && !rb.hanger.moveToLowerLimit()){
                         telemetry.addData("Touched: ", rb.hanger.isTouched());
                         telemetry.update();
+                    }
+
+                    rb.drive.setThrottle(-0.5);
+                    sleep(350);
+                    rb.drive.setThrottle(0);
+
+
+                    imu.initialize(parameters);
+
+                    // make sure the imu gyro is calibrated before continuing.
+                    while (!isStopRequested() && !imu.isGyroCalibrated()) {
+                        sleep(50);
+                        idle();
                     }
 
                     robo = ENUMS.AutoStates.MOVETOSAMPLE;
@@ -440,7 +470,7 @@ public class Depot extends LinearOpMode {
 
                     if(goldPosition == ENUMS.GoldPosition.RIGHT) {
 
-                        rotate(40, power);
+                        rotate(30, power);
                         sleep(200);
                         rb.drive.strafe(-0.5);
                         sleep(2000);
@@ -452,10 +482,12 @@ public class Depot extends LinearOpMode {
 
                     } else if (goldPosition == ENUMS.GoldPosition.LEFT) {
 
-                        rotate(-40, power);
+                        rotate(-30, power);
                         sleep(200);
+                        rb.drive.adjustHeading(45, true);
+                        sleep(300);
                         rb.drive.strafe(0.5);
-                        sleep(2000);
+                        sleep(1000);
                         rb.drive.setThrottle(0);
                         sleep(300);
                         rb.drive.setThrottle(0.6);
