@@ -404,20 +404,11 @@ public class DriveTrain {
 
     public void moveEncoder(int inchesLeft, int inchesRight, double speed){
 
-        int lfPose = FL.getCurrentPosition() + (int)(inchesLeft * COUNTS_PER_INCH);
         int lrPose = BL.getCurrentPosition() + (int)(inchesLeft * COUNTS_PER_INCH);
-        int rfPos = FR.getCurrentPosition() + (int)(inchesRight * COUNTS_PER_INCH);
-        int rrPos = BR.getCurrentPosition() + (int)(inchesRight * COUNTS_PER_INCH);
 
-        FL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        BL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        FR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        BR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        BL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        FL.setTargetPosition(lfPose);
         BL.setTargetPosition(lrPose);
-        FR.setTargetPosition(rfPos);
-        BR.setTargetPosition(rrPos);
 
         FL.setPower(speed);
         BL.setPower(speed);
@@ -457,12 +448,6 @@ public class DriveTrain {
             while (opModeIsActive &&
                     (motorsBusy())) {
 
-                // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d :%7d", newFLTarget,  newFRTarget);
-                telemetry.addData("Path2",  "Running at %7d :%7d",
-                        FL.getCurrentPosition(),
-                        FR.getCurrentPosition());
-                telemetry.update();
             }
 
             // Stop all motion;

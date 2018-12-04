@@ -9,6 +9,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -308,7 +309,7 @@ public class Depot extends LinearOpMode {
                     }
 
                     rb.drive.setThrottle(-0.5);
-                    sleep(350);
+                    sleep(500);
                     rb.drive.setThrottle(0);
 
 
@@ -408,8 +409,6 @@ public class Depot extends LinearOpMode {
 
                     if (goldPosition == ENUMS.GoldPosition.LEFT){
 
-                        float targetPos = (float) getAngle();
-
                         rotate(-30, power);
 
                         sleep(500);
@@ -417,9 +416,10 @@ public class Depot extends LinearOpMode {
                         sleep(1500);
                         rb.drive.setThrottle(0);
                         sleep(300);
-                        rb.drive.setThrottle(0.4);
-                        sleep(2000);
+                        rb.drive.setThrottle(0.3);
+                        sleep(1000);
                         rb.drive.setThrottle(0);
+                        sleep(300);
 
                     } else if (goldPosition == ENUMS.GoldPosition.CENTER) {
 
@@ -430,19 +430,27 @@ public class Depot extends LinearOpMode {
 
                     } else if (goldPosition == ENUMS.GoldPosition.RIGHT){
 
-                        float targetPos = (float) getAngle();
-
                         rotate(30, power);
 
                         sleep(500);
 
-                        rb.drive.strafe(-0.5);
-                        sleep(1500);
+                        rb.drive.strafe(-0.3);
+                        sleep(3250);
                         rb.drive.setThrottle(0);
                         sleep(300);
                         rb.drive.setThrottle(0.4);
-                        sleep(2000);
+                        sleep(1000);
                         rb.drive.setThrottle(0);
+                        sleep(300);
+                        rb.drive.setThrottle(-0.4);
+                        sleep(1000);
+                        rb.drive.setThrottle(0);
+                        sleep(300);
+                        adjustHeading(0, true);
+                        rotate(-90, power);
+                        sleep(300);
+                        rb.drive.strafe(0.3);
+                        sleep(4000);
 
                         robo = ENUMS.AutoStates.FINDWALLFORDEPOT;
                         telemetry.update();
@@ -468,23 +476,10 @@ public class Depot extends LinearOpMode {
 
                 case FINDWALLFORDEPOT:{
 
-                    if(goldPosition == ENUMS.GoldPosition.RIGHT) {
-
-                        rotate(30, power);
-                        sleep(200);
-                        rb.drive.strafe(-0.5);
-                        sleep(2000);
-                        rb.drive.setThrottle(0);
-                        sleep(300);
-                        rb.drive.setThrottle(0.6);
-                        sleep(1500);
-                        rb.drive.setThrottle(0);
-
-                    } else if (goldPosition == ENUMS.GoldPosition.LEFT) {
-
+                        rb.drive.adjustHeading(0, true);
                         rotate(-30, power);
                         sleep(200);
-                        rb.drive.adjustHeading(45, true);
+                        rotate(45, power);
                         sleep(300);
                         rb.drive.strafe(0.5);
                         sleep(1000);
@@ -493,13 +488,6 @@ public class Depot extends LinearOpMode {
                         rb.drive.setThrottle(0.6);
                         sleep(1500);
                         rb.drive.setThrottle(0);
-
-                    } else if (goldPosition == ENUMS.GoldPosition.CENTER){
-                        rotate(30, power);
-                        rb.drive.strafe(-0.5);
-                        sleep(2500);
-                        rb.drive.setThrottle(0);
-                    }
 
 
                     robo = ENUMS.AutoStates.DROPTM;
@@ -632,6 +620,80 @@ public class Depot extends LinearOpMode {
 
         // reset angle tracking on new heading.
         resetAngle();
+    }
+
+    public void adjustHeading(int targetHeading, boolean slow) {
+
+        //CREDIT TO 0207!!
+
+        //Initialize the turnleft boolean.
+        boolean turnLeft = false;
+        double leftPower = 0, rightPower = 0;
+
+        //Get the current heading from the imu.
+        float curHeading = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+
+        //If within a reasonable degree of error of the target heading, set power to zero on all motors.
+        if (Math.abs(curHeading - targetHeading) <= 1) {
+            rb.drive.setThrottle(0);
+            return;
+        }
+        //Generate our proportional term
+        float powFactor = Math.abs(targetHeading - curHeading) * (float) (slow ? .0055 : .02);
+
+        //Choose the direction of the turn based on given target and current heading
+        switch (targetHeading) {
+            case 0:
+                turnLeft = curHeading <= 0;
+                break;
+
+            case 90:
+                turnLeft = !(curHeading <= -90 || curHeading >= 90);
+                break;
+
+            case 180:
+                turnLeft = !(curHeading <= 0);
+                break;
+
+            case -90:
+                turnLeft = curHeading <= -90 || curHeading >= 90;
+                break;
+
+            case 45:
+                turnLeft = !(curHeading <= -135 || curHeading >= 45);
+                break;
+
+            case -45:
+                turnLeft = curHeading <= -45 || curHeading >= 45;
+                break;
+
+            case 30:
+                turnLeft = !(curHeading <= -30 || curHeading >= 30);
+                break;
+
+            case -30:
+                turnLeft = curHeading <= -30 || curHeading >= 30;
+                break;
+
+            case 60:
+                turnLeft = !(curHeading <= -120 || curHeading >= 60);
+                break;
+
+            case -60:
+                turnLeft = curHeading <= -60 || curHeading >= 60;
+                break;
+
+            default:
+                turnLeft = targetHeading < 0 ? (curHeading <= targetHeading || curHeading >= -1*targetHeading) : !(curHeading <= -1*targetHeading || curHeading >= targetHeading);
+        }
+
+        //Clip the powers to within an acceptable range for the motors and apply the proportional factor.
+        leftPower = Range.clip((turnLeft ? -1 : 1) * powFactor, -1, 1);
+        rightPower = Range.clip((turnLeft ? 1 : -1) * powFactor, -1, 1);
+
+        //Set power to all motors
+        rb.drive.runMotorsSides(leftPower, rightPower);
+
     }
 
 }
