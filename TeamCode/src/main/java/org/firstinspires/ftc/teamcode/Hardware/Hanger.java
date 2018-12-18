@@ -20,7 +20,7 @@ public class Hanger{
 
     DigitalChannel digitalTouch;  // Hardware Device Object
 
-    final double SENSOR_IN_FROM_GROUND = 2.1468785541058;
+    final double SENSOR_IN_FROM_GROUND = 2.16;
 
     public Hanger(){
     }

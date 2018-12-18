@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OpModes.Auto.MAIN;
+package org.firstinspires.ftc.teamcode.OpModes.Auto.MAIN.Q1;
 
 
 import com.disnodeteam.dogecv.CameraViewDisplay;
@@ -36,8 +36,8 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
 import static org.firstinspires.ftc.teamcode.Control.FinalValues.goldPosMissedMostOften;
 
-@Autonomous (name = "Depot", group = "MAIN")
-public class Depot extends LinearOpMode {
+@Autonomous (name = "Depot Q1", group = "MAIN")
+public class DepotQ1 extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
     private static final float mmPerInch = 25.4f;
@@ -87,8 +87,6 @@ public class Depot extends LinearOpMode {
     int startingAngle = 0;
 
     PIDController pidRotate;
-
-    boolean isRetracted = true;
 
     @Override
     public void runOpMode() {
@@ -305,7 +303,15 @@ public class Depot extends LinearOpMode {
                     sleep(750);
                     rb.drive.setThrottle(0);
 
-                    runtime.reset();
+                    while(opModeIsActive() && !rb.hanger.moveToLowerLimit()){
+                        telemetry.addData("Touched: ", rb.hanger.isTouched());
+                        telemetry.update();
+                    }
+
+                    rb.drive.setThrottle(-0.8);
+                    sleep(500);
+                    rb.drive.setThrottle(0);
+
 
                     imu.initialize(parameters);
 
@@ -314,8 +320,6 @@ public class Depot extends LinearOpMode {
                         sleep(50);
                         idle();
                     }
-
-                    isRetracted = false;
 
                     robo = ENUMS.AutoStates.MOVETOSAMPLE;
                     break;
@@ -531,10 +535,6 @@ public class Depot extends LinearOpMode {
             telemetry.addData("gold pos", goldPosition);
             telemetry.addData("gold?", goldFound);
             telemetry.update();
-
-            if (!isRetracted){
-                rb.hanger.moveToLowerLimit();
-            }
 
             idle();
         }

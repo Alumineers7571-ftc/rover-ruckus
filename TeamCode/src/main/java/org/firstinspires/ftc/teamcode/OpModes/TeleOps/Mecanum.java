@@ -25,6 +25,7 @@ public class Mecanum extends OpMode{
         robot.drive.manualDrive(gamepad1);
         //robot.glyphSystem.controlSystem(gamepad2);
         robot.mineralSystem.controlSystem(gamepad2, telemetry);
+        robot.hanger.controlHanger(gamepad2);
 
     }
 
